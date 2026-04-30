@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Container } from "@/components/ui/container";
 import { PublicHeader } from "@/components/tickets/public-header";
@@ -5,6 +6,29 @@ import { Reveal } from "@/components/ui/reveal";
 import { FeatureCard } from "@/components/ui/feature-card";
 import { TicketPreviewCard } from "@/components/ui/ticket-preview-card";
 import { DocumentIcon, MessageIcon, SearchIcon, CheckIcon, InfoIcon, ArrowRightIcon, PlusIcon, LockIcon } from "@/components/ui/icons";
+import { OG_IMAGE, SITE_DESCRIPTION, SITE_TITLE, SITE_URL } from "@/lib/seo";
+
+export const metadata: Metadata = {
+  title: {
+    absolute: SITE_TITLE,
+  },
+  description: SITE_DESCRIPTION,
+  alternates: {
+    canonical: SITE_URL,
+  },
+  openGraph: {
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    url: SITE_URL,
+    images: [OG_IMAGE],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+    images: [OG_IMAGE.url],
+  },
+};
 
 const processSteps = [
   {

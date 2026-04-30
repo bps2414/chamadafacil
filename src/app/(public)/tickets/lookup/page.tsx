@@ -4,9 +4,25 @@ import { PublicPageShell } from "@/components/tickets/public-page-shell";
 import { TicketLookupForm } from "@/components/tickets/ticket-lookup-form";
 import { InfoCard } from "@/components/ui/info-card";
 import { InfoIcon, MessageIcon } from "@/components/ui/icons";
+import { OG_IMAGE, SITE_URL } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Consultar chamado",
+  alternates: {
+    canonical: `${SITE_URL}/tickets/lookup`,
+  },
+  openGraph: {
+    title: "Consultar chamado | ChamadaFácil",
+    description: "Consulte o status do seu chamado usando número e e-mail.",
+    url: `${SITE_URL}/tickets/lookup`,
+    images: [OG_IMAGE],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Consultar chamado | ChamadaFácil",
+    description: "Consulte o status do seu chamado usando número e e-mail.",
+    images: [OG_IMAGE.url],
+  },
   description: "Consulte o status do seu chamado usando número e e-mail.",
 };
 

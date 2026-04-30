@@ -4,9 +4,25 @@ import { PublicPageShell } from "@/components/tickets/public-page-shell";
 import { TicketForm } from "@/components/tickets/ticket-form";
 import { InfoCard } from "@/components/ui/info-card";
 import { InfoIcon, CheckIcon, SearchIcon } from "@/components/ui/icons";
+import { OG_IMAGE, SITE_URL } from "@/lib/seo";
 
 export const metadata: Metadata = {
   title: "Abrir chamado",
+  alternates: {
+    canonical: `${SITE_URL}/tickets/new`,
+  },
+  openGraph: {
+    title: "Abrir chamado | ChamadaFácil",
+    description: "Abra uma solicitação de suporte no ChamadaFácil sem criar conta.",
+    url: `${SITE_URL}/tickets/new`,
+    images: [OG_IMAGE],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Abrir chamado | ChamadaFácil",
+    description: "Abra uma solicitação de suporte no ChamadaFácil sem criar conta.",
+    images: [OG_IMAGE.url],
+  },
   description: "Abra uma solicitação de suporte sem criar conta.",
 };
 
