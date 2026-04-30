@@ -1,4 +1,66 @@
--- Demo data for MVP review. Admin auth users are created manually in Supabase Auth.
+-- Demo data for MVP review.
+-- Admin auth users can be created manually in Supabase Auth, but for local dev we insert one here.
+
+-- 1. Create a demo admin user (admin@chamadafacil.com.br / admin123)
+insert into auth.users (
+  instance_id,
+  id,
+  aud,
+  role,
+  email,
+  encrypted_password,
+  email_confirmed_at,
+  created_at,
+  updated_at,
+  confirmation_token,
+  email_change,
+  email_change_token_new,
+  recovery_token
+) values (
+  '00000000-0000-0000-0000-000000000000',
+  '99999999-9999-4999-8999-999999999999',
+  'authenticated',
+  'authenticated',
+  'admin@chamadafacil.com.br',
+  extensions.crypt('admin123', extensions.gen_salt('bf')),
+  now(),
+  now(),
+  now(),
+  '',
+  '',
+  '',
+  ''
+) on conflict (id) do nothing;
+
+insert into auth.identities (
+  id,
+  user_id,
+  provider_id,
+  identity_data,
+  provider,
+  last_sign_in_at,
+  created_at,
+  updated_at
+) values (
+  '99999999-9999-4999-8999-999999999999',
+  '99999999-9999-4999-8999-999999999999',
+  '99999999-9999-4999-8999-999999999999',
+  format('{"sub":"%s","email":"%s"}', '99999999-9999-4999-8999-999999999999', 'admin@chamadafacil.com.br')::jsonb,
+  'email',
+  now(),
+  now(),
+  now()
+) on conflict (id) do nothing;
+
+delete from public.tickets
+where ticket_number in (
+  'CF-2026-00001',
+  'CF-2026-00002',
+  'CF-2026-00003',
+  'CF-2026-00004',
+  'CF-2026-00005',
+  'CF-2026-00006'
+);
 
 insert into public.tickets (
   id,
@@ -99,8 +161,9 @@ values
     '2026-04-20 17:35:00-03',
     null
   )
-on conflict (ticket_number) do update
+on conflict (id) do update
 set
+  ticket_number = excluded.ticket_number,
   requester_name = excluded.requester_name,
   requester_email = excluded.requester_email,
   requester_phone = excluded.requester_phone,

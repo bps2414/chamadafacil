@@ -163,6 +163,6 @@ Rules:
 
 - Submit buttons show a saving state and are disabled during submission.
 - Dashboard uses a compact loading skeleton.
-- Ticket detail uses a loading placeholder for the main content.
+- Ticket detail uses a loading skeleton for the main content.
 - Lookup results show loading feedback after submit.
 - Admin filters keep the current selected values visible while loading.

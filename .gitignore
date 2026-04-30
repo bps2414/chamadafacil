@@ -18,7 +18,11 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 .next-dev*.log
+.phase*-*.log
 *.tsbuildinfo
+
+# Supabase local state
+supabase/.temp/
 
 # system
 .DS_Store

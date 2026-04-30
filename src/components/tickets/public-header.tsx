@@ -3,7 +3,8 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Container } from "@/components/ui/container";
-import { MessageIcon, HamburgerIcon, CloseIcon } from "@/components/ui/icons";
+import { MessageIcon, HamburgerIcon, CloseIcon, SunIcon, MoonIcon } from "@/components/ui/icons";
+import { useTheme } from "@/components/ui/theme-provider";
 
 const links = [
   { href: "/", label: "Início", value: "home" },
@@ -16,11 +17,40 @@ interface PublicHeaderProps {
   active?: "home" | "new" | "lookup" | "login";
 }
 
+function ThemeToggle() {
+  const { theme, toggle } = useTheme();
+  const isDark = theme === "dark";
+
+  return (
+    <button
+      onClick={toggle}
+      aria-label={isDark ? "Ativar modo claro" : "Ativar modo escuro"}
+      title={isDark ? "Modo claro" : "Modo escuro"}
+      className="flex items-center justify-center h-9 w-9 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-all duration-200 active:scale-95"
+    >
+      <span className="relative flex h-4 w-4">
+        {/* Sun — visible in dark mode */}
+        <SunIcon
+          className={`absolute inset-0 h-4 w-4 transition-all duration-300 ${
+            isDark ? "opacity-100 rotate-0 scale-100" : "opacity-0 -rotate-90 scale-50"
+          }`}
+        />
+        {/* Moon — visible in light mode */}
+        <MoonIcon
+          className={`absolute inset-0 h-4 w-4 transition-all duration-300 ${
+            isDark ? "opacity-0 rotate-90 scale-50" : "opacity-100 rotate-0 scale-100"
+          }`}
+        />
+      </span>
+    </button>
+  );
+}
+
 export function PublicHeader({ active }: PublicHeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur-md theme-transition">
       <Container className="flex h-16 items-center justify-between">
         <Link
           aria-label="ChamadaFácil - página inicial"
@@ -60,45 +90,53 @@ export function PublicHeader({ active }: PublicHeaderProps) {
               </Link>
             );
           })}
+
+          {/* Dark mode toggle — desktop */}
+          <ThemeToggle />
         </nav>
 
-        {/* Mobile Nav Toggle */}
-        <button
-          className="md:hidden flex items-center justify-center h-10 w-10 text-muted-foreground hover:text-foreground"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          aria-label={isMenuOpen ? "Fechar menu" : "Abrir menu"}
-          aria-expanded={isMenuOpen}
-        >
-          {isMenuOpen ? <CloseIcon className="h-6 w-6" /> : <HamburgerIcon className="h-6 w-6" />}
-        </button>
+        {/* Mobile: theme toggle + hamburger */}
+        <div className="md:hidden flex items-center gap-1">
+          <ThemeToggle />
+          <button
+            className="flex items-center justify-center h-10 w-10 text-muted-foreground hover:text-foreground"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label={isMenuOpen ? "Fechar menu" : "Abrir menu"}
+            aria-expanded={isMenuOpen}
+          >
+            {isMenuOpen ? <CloseIcon className="h-6 w-6" /> : <HamburgerIcon className="h-6 w-6" />}
+          </button>
+        </div>
       </Container>
 
       {/* Mobile Nav Menu */}
       <div
-        className={`md:hidden overflow-hidden transition-all duration-200 ease-in-out ${
-          isMenuOpen ? "max-h-64 border-b border-border bg-background shadow-md" : "max-h-0"
+        className={`md:hidden grid transition-[grid-template-rows] duration-300 ease-out ${
+          isMenuOpen ? "grid-rows-[1fr] border-b border-border shadow-sm" : "grid-rows-[0fr]"
         }`}
       >
-        <Container className="py-4 flex flex-col gap-4">
-          {links.map((link) => {
-            const isActive = link.value === active;
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setIsMenuOpen(false)}
-                className={`block text-base font-medium px-4 py-3 rounded-lg transition-colors ${
-                  isActive 
-                    ? "bg-primary/10 text-primary" 
-                    : "text-muted-foreground hover:bg-surface-hover hover:text-foreground"
-                }`}
-                aria-current={isActive ? "page" : undefined}
-              >
-                {link.label}
-              </Link>
-            );
-          })}
-        </Container>
+        <div className="overflow-hidden">
+          <Container className="py-4 flex flex-col gap-3">
+            {links.map((link) => {
+              const isActive = link.value === active;
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setIsMenuOpen(false)}
+                  className={`block text-base font-medium px-4 py-3 rounded-lg transition-all active:scale-[0.98] ${
+                    isActive 
+                      ? "bg-primary/10 text-primary" 
+                      : "text-muted-foreground hover:bg-surface-hover hover:text-foreground"
+                  }`}
+                  aria-current={isActive ? "page" : undefined}
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
+          </Container>
+        </div>
       </div>
     </header>
   );

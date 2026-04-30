@@ -27,6 +27,8 @@ type ValidationResult<TData, TField extends string> =
   | { errors: FieldErrors<TField>; success: false };
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const phonePattern = /^[0-9\s()+.-]+$/;
+const ticketNumberPattern = /^CF-\d{4}-\d{5}$/;
 
 export function validateCreateTicketForm(
   formData: FormData,
@@ -42,6 +44,8 @@ export function validateCreateTicketForm(
     errors.requester_name = ["Informe seu nome com pelo menos 2 caracteres."];
   } else if (requesterName.length > 80) {
     errors.requester_name = ["O nome deve ter no máximo 80 caracteres."];
+  } else if (hasUnsafeControlChars(requesterName)) {
+    errors.requester_name = ["O nome contém caracteres inválidos."];
   }
 
   if (!requesterEmail) {
@@ -52,20 +56,30 @@ export function validateCreateTicketForm(
     errors.requester_email = ["Informe um e-mail válido."];
   }
 
-  if (requesterPhone.length > 30) {
+  if (requesterPhone && requesterPhone.length < 8) {
+    errors.requester_phone = ["Informe um telefone com pelo menos 8 caracteres."];
+  } else if (requesterPhone.length > 30) {
     errors.requester_phone = ["O telefone deve ter no máximo 30 caracteres."];
+  } else if (requesterPhone && !phonePattern.test(requesterPhone)) {
+    errors.requester_phone = [
+      "Use apenas números, espaços e os símbolos + ( ) - . no telefone.",
+    ];
   }
 
   if (subject.length < 5) {
     errors.subject = ["Descreva o assunto com pelo menos 5 caracteres."];
   } else if (subject.length > 120) {
     errors.subject = ["O assunto deve ter no máximo 120 caracteres."];
+  } else if (hasUnsafeControlChars(subject)) {
+    errors.subject = ["O assunto contém caracteres inválidos."];
   }
 
   if (description.length < 20) {
     errors.description = ["Descreva o problema com pelo menos 20 caracteres."];
   } else if (description.length > 2000) {
     errors.description = ["A descrição deve ter no máximo 2000 caracteres."];
+  } else if (hasUnsafeControlChars(description)) {
+    errors.description = ["A descrição contém caracteres inválidos."];
   }
 
   if (Object.keys(errors).length > 0) {
@@ -93,6 +107,8 @@ export function validateLookupTicketForm(
 
   if (!ticketNumber) {
     errors.ticket_number = ["Informe o número do chamado."];
+  } else if (!ticketNumberPattern.test(ticketNumber)) {
+    errors.ticket_number = ["Informe um número de chamado válido, como CF-2026-00001."];
   }
 
   if (!requesterEmail) {
@@ -118,6 +134,10 @@ export function validateLookupTicketForm(
 
 export function normalizeTicketNumber(value: string) {
   return value.trim().toUpperCase();
+}
+
+function hasUnsafeControlChars(value: string) {
+  return /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/.test(value);
 }
 
 function readString(formData: FormData, field: string) {

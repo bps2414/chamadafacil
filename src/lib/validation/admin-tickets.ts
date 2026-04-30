@@ -20,6 +20,8 @@ type ValidationResult<TData, TField extends string> =
   | { errors: FieldErrors<TField>; success: false };
 
 const statusValues = ["open", "in_progress", "resolved"] as const;
+const uuidPattern =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 export function validateAdminTicketMetaForm(
   formData: FormData,
@@ -31,6 +33,8 @@ export function validateAdminTicketMetaForm(
 
   if (!ticketId) {
     errors.ticket_id = ["Chamado inválido. Volte ao dashboard e tente novamente."];
+  } else if (!uuidPattern.test(ticketId)) {
+    errors.ticket_id = ["Identificador do chamado inválido."];
   }
 
   if (!ticketStatus) {
@@ -60,12 +64,16 @@ export function validateAdminTicketResponseForm(
 
   if (!ticketId) {
     errors.ticket_id = ["Chamado inválido. Volte ao dashboard e tente novamente."];
+  } else if (!uuidPattern.test(ticketId)) {
+    errors.ticket_id = ["Identificador do chamado inválido."];
   }
 
   if (body.length < 2) {
     errors.body = ["Escreva uma resposta com pelo menos 2 caracteres."];
   } else if (body.length > 2000) {
     errors.body = ["A resposta deve ter no máximo 2000 caracteres."];
+  } else if (hasUnsafeControlChars(body)) {
+    errors.body = ["A resposta contém caracteres inválidos."];
   }
 
   if (Object.keys(errors).length > 0) {
@@ -89,4 +97,8 @@ function readString(formData: FormData, field: string) {
   const value = formData.get(field);
 
   return typeof value === "string" ? value.trim() : "";
+}
+
+function hasUnsafeControlChars(value: string) {
+  return /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/.test(value);
 }

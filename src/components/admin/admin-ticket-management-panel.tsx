@@ -66,22 +66,24 @@ export function AdminTicketManagementPanel({
   }, [responseState.status, router]);
 
   return (
-    <aside className="rounded-2xl border border-border bg-background p-6 shadow-sm lg:sticky lg:top-24 lg:self-start">
-      <h2 className="text-sm font-bold uppercase tracking-wider text-muted-foreground mb-6">Gerenciamento</h2>
+    <aside className="rounded-2xl border border-border bg-surface-hover/30 p-6 lg:sticky lg:top-24 lg:self-start">
+      <div className="flex items-center gap-2 mb-6 border-b border-border/50 pb-4">
+        <h2 className="text-sm font-bold uppercase tracking-wider text-foreground">Gerenciamento</h2>
+      </div>
 
       <form action={metaFormAction} className="space-y-6">
         <input name="ticket_id" type="hidden" value={ticketId} />
 
         <div>
           <label className="text-sm font-semibold text-foreground flex items-center justify-between mb-2" htmlFor="status">
-            <span>Status</span>
+            <span>Status do Chamado</span>
           </label>
           <select
             aria-describedby={
               metaState.errors?.status ? "ticket-status-error" : undefined
             }
             aria-invalid={Boolean(metaState.errors?.status)}
-            className={`h-11 w-full rounded-lg border bg-background px-4 py-2.5 text-sm shadow-sm outline-none transition-colors focus:border-ring focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:bg-muted/50 ${
+            className={`h-11 w-full rounded-xl border bg-background px-4 py-2.5 text-sm shadow-sm outline-none transition-colors focus:border-primary focus:ring-1 focus:ring-primary disabled:cursor-not-allowed disabled:bg-muted/50 ${
               metaState.errors?.status ? "border-destructive" : "border-border"
             }`}
             defaultValue={initialStatus}
@@ -98,7 +100,7 @@ export function AdminTicketManagementPanel({
 
         <fieldset>
           <legend className="sr-only">Urgência</legend>
-          <label className="flex items-start gap-3 rounded-xl border border-border/60 bg-surface-hover/30 px-4 py-4 cursor-pointer transition-colors hover:bg-surface-hover">
+          <label className="flex items-start gap-3 rounded-xl border border-border bg-background px-4 py-4 cursor-pointer transition-all hover:border-border/80 shadow-sm">
             <div className="flex items-center h-5 mt-0.5">
               <input
                 className="h-4 w-4 rounded border-border text-primary focus:ring-primary disabled:cursor-not-allowed"
@@ -127,7 +129,7 @@ export function AdminTicketManagementPanel({
           variant="secondary"
           isLoading={metaPending}
         >
-          {metaPending ? "Salvando..." : "Salvar alterações"}
+          {metaPending ? "Salvando..." : "Atualizar chamado"}
         </Button>
       </form>
 
@@ -141,8 +143,10 @@ export function AdminTicketManagementPanel({
         <input name="ticket_id" type="hidden" value={ticketId} />
 
         <div>
-          <h3 className="text-sm font-bold uppercase tracking-wider text-muted-foreground mb-1">Nova Resposta</h3>
-          <p className="text-xs text-muted-foreground mb-4">
+          <div className="flex items-center gap-2 mb-1">
+            <h3 className="text-sm font-bold uppercase tracking-wider text-foreground">Nova Resposta</h3>
+          </div>
+          <p className="text-xs text-muted-foreground mb-4 leading-relaxed">
             A resposta ficará visível publicamente para o solicitante.
           </p>
         </div>

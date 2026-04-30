@@ -3,6 +3,7 @@ import { Container } from "@/components/ui/container";
 import { signOutAdminAction } from "@/lib/data/admin-auth-actions";
 import { MessageIcon, LogOutIcon } from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 type AdminHeaderProps = {
   email?: string | null;
@@ -13,9 +14,10 @@ export function AdminHeader({ email }: AdminHeaderProps) {
     <header className="sticky top-0 z-40 w-full border-b border-border bg-background/80 backdrop-blur-xl">
       <Container className="flex h-16 items-center justify-between">
         <Link
-          aria-label="ChamadaFácil - painel administrativo"
+          aria-label="ChamadaFácil - página inicial"
+          title="Voltar para a página inicial"
           className="flex items-center gap-2.5 transition-transform hover:scale-[1.02]"
-          href="/admin"
+          href="/"
         >
           <span
             aria-hidden="true"
@@ -29,13 +31,15 @@ export function AdminHeader({ email }: AdminHeaderProps) {
         </Link>
 
         <div className="flex items-center gap-4">
-          <div className="hidden sm:flex min-w-0 text-right">
+          <ThemeToggle />
+          
+          <div className="hidden sm:flex flex-col items-end justify-center min-w-0">
             {email ? (
-              <span className="block truncate text-sm font-medium text-foreground">
+              <span className="block truncate text-sm font-medium text-foreground leading-tight">
                 {email}
               </span>
             ) : null}
-            <span className="block text-xs font-medium text-muted-foreground uppercase tracking-wider">
+            <span className="block text-[10px] font-bold text-muted-foreground uppercase tracking-wider leading-tight">
               Admin
             </span>
           </div>

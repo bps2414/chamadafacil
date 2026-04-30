@@ -39,8 +39,8 @@ export function AdminTicketList({ filters, tickets }: AdminTicketListProps) {
       </div>
 
       <div className="divide-y divide-border/50 lg:hidden">
-        {tickets.map((ticket) => (
-          <TicketCard key={ticket.id} ticket={ticket} />
+        {tickets.map((ticket, index) => (
+          <TicketCard key={ticket.id} ticket={ticket} index={index} />
         ))}
       </div>
 
@@ -48,43 +48,43 @@ export function AdminTicketList({ filters, tickets }: AdminTicketListProps) {
         <table className="w-full border-collapse text-left text-sm">
           <thead>
             <tr className="border-b border-border/50 bg-surface-hover/30 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              <th className="px-6 py-4">Chamado</th>
-              <th className="px-6 py-4">Assunto</th>
-              <th className="px-6 py-4">Solicitante</th>
-              <th className="px-6 py-4">Status</th>
-              <th className="px-6 py-4">Urgência</th>
-              <th className="px-6 py-4">Atualização</th>
-              <th className="px-6 py-4 text-right">Ação</th>
+              <th className="px-4 py-4 w-24">Chamado</th>
+              <th className="px-4 py-4">Assunto</th>
+              <th className="px-4 py-4 w-32">Solicitante</th>
+              <th className="px-4 py-4 w-32">Status</th>
+              <th className="px-4 py-4 w-24">Urgência</th>
+              <th className="px-4 py-4 w-32">Atualização</th>
+              <th className="px-4 py-4 w-24 text-right">Ação</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border/50">
             {tickets.map((ticket) => (
               <tr key={ticket.id} className="align-middle transition-colors hover:bg-surface-hover/50 group">
-                <td className="px-6 py-4 font-semibold text-foreground whitespace-nowrap">
+                <td className="px-4 py-4 font-semibold text-foreground">
                   {ticket.ticket_number}
                 </td>
-                <td className="max-w-[200px] xl:max-w-xs px-6 py-4 font-medium text-foreground">
+                <td className="px-4 py-4 font-medium text-foreground">
                   <span className="line-clamp-2">{ticket.subject}</span>
                 </td>
-                <td className="px-6 py-4 text-muted-foreground whitespace-nowrap">
-                  {ticket.requester_name}
+                <td className="px-4 py-4 text-muted-foreground">
+                  <span className="line-clamp-2">{ticket.requester_name}</span>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-4 py-4">
                   <TicketStatusBadge status={ticket.status} />
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="px-4 py-4">
                   <TicketUrgencyBadge isUrgent={ticket.is_urgent} />
                 </td>
-                <td className="px-6 py-4 text-muted-foreground whitespace-nowrap">
+                <td className="px-4 py-4 text-muted-foreground text-xs">
                   {formatDateTime(ticket.updated_at || ticket.created_at)}
                 </td>
-                <td className="px-6 py-4 text-right whitespace-nowrap">
+                <td className="px-4 py-4 text-right">
                   <Link
-                    className="inline-flex items-center justify-center rounded-lg border border-transparent px-4 py-2 text-sm font-semibold text-primary transition-all hover:bg-primary/10 hover:border-primary/20 opacity-0 group-hover:opacity-100 focus:opacity-100"
+                    className="inline-flex items-center justify-center rounded-lg border border-transparent px-3 py-1.5 text-sm font-semibold text-primary transition-all hover:bg-primary/10 hover:border-primary/20"
                     href={`/admin/tickets/${ticket.id}`}
                   >
                     Abrir
-                    <ArrowRightIcon className="ml-2 h-4 w-4" />
+                    <ArrowRightIcon className="ml-1.5 h-4 w-4" />
                   </Link>
                 </td>
               </tr>
@@ -123,20 +123,23 @@ export function AdminDashboardSkeleton() {
   );
 }
 
-function TicketCard({ ticket }: { ticket: AdminTicket }) {
+function TicketCard({ ticket, index }: { ticket: AdminTicket, index: number }) {
+  // Use index to create a staggered animation delay (max 500ms)
+  const delayClass = `animate-delay-${Math.min(index * 100, 500)}`;
+  
   return (
-    <article className="p-5 transition-colors hover:bg-surface-hover/30">
+    <article className={`p-5 transition-all duration-300 hover:bg-surface-hover hover:shadow-sm animate-slide-up opacity-0 ${delayClass}`}>
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2 mb-1.5">
-            <span className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="inline-flex items-center justify-center rounded-md bg-muted px-2 py-1 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
               {ticket.ticket_number}
             </span>
           </div>
           <h2 className="text-base font-semibold text-foreground leading-snug line-clamp-2">
             {ticket.subject}
           </h2>
-          <p className="mt-1 text-sm text-muted-foreground truncate">
+          <p className="mt-1 text-sm text-muted-foreground flex items-center gap-1.5 truncate">
             {ticket.requester_name}
           </p>
         </div>
@@ -149,7 +152,7 @@ function TicketCard({ ticket }: { ticket: AdminTicket }) {
         </div>
         <Link
           aria-label={`Abrir chamado ${ticket.ticket_number}`}
-          className="inline-flex shrink-0 items-center justify-center rounded-lg border border-border bg-background px-4 py-2 text-sm font-semibold text-foreground shadow-sm hover:bg-surface-hover hover:-translate-y-0.5 hover:shadow-md transition-all duration-200 ease-out"
+          className="inline-flex shrink-0 items-center justify-center rounded-lg border border-border bg-background px-4 py-2 text-sm font-semibold text-foreground shadow-sm hover:bg-primary hover:text-primary-foreground hover:border-primary hover:-translate-y-0.5 hover:shadow-md transition-all duration-300 ease-out"
           href={`/admin/tickets/${ticket.id}`}
         >
           Abrir
@@ -157,7 +160,7 @@ function TicketCard({ ticket }: { ticket: AdminTicket }) {
       </div>
 
       <time
-        className="mt-4 block text-xs font-medium text-muted-foreground"
+        className="mt-4 block text-xs font-medium text-muted-foreground border-t border-border/50 pt-4"
         dateTime={ticket.updated_at || ticket.created_at}
       >
         Atualizado em {formatDateTime(ticket.updated_at || ticket.created_at)}

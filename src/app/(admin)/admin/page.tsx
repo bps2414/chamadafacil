@@ -23,7 +23,7 @@ import {
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Painel admin | ChamadaFácil",
+  title: "Painel admin",
   description: "Fila protegida de chamados do ChamadaFácil.",
 };
 

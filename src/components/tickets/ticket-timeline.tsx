@@ -59,7 +59,7 @@ export function TicketTimeline({ ticket }: TicketTimelineProps) {
                     {formatDateTime(entry.created_at)}
                   </time>
                 </div>
-                <p className="whitespace-pre-wrap text-sm leading-relaxed text-foreground">
+                <p className="whitespace-pre-wrap break-words text-sm leading-relaxed text-foreground">
                   {entry.body}
                 </p>
               </div>
@@ -73,7 +73,7 @@ export function TicketTimeline({ ticket }: TicketTimelineProps) {
           <EmptyState 
             icon={<MessageIcon className="h-6 w-6" />}
             title="Aguardando resposta"
-            description="A equipe de suporte ainda não respondeu a este chamado. Você receberá uma notificação assim que houver novidades."
+            description="A equipe de suporte ainda não respondeu a este chamado. Consulte novamente mais tarde usando o número do chamado e o e-mail cadastrado."
             className="py-6"
           />
         </div>

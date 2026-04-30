@@ -31,7 +31,7 @@ Create the base Next.js project structure and development foundation without bui
 - Add Supabase dependencies.
 - Add Supabase environment variable example.
 - Create initial database migration plan.
-- Add seed file placeholder.
+- Add seed file structure.
 
 ### Acceptance Criteria
 

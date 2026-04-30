@@ -1,3 +1,5 @@
+"use client";
+
 import type { AdminTicketFilters } from "@/lib/data/admin-tickets";
 import { Button } from "@/components/ui/button";
 
@@ -10,8 +12,9 @@ export function AdminTicketFilters({ filters }: AdminTicketFiltersProps) {
     <form
       action="/admin"
       className="rounded-2xl border border-border bg-background p-5 shadow-sm mb-6"
+      onChange={(e) => e.currentTarget.requestSubmit()}
     >
-      <div className="grid gap-4 sm:grid-cols-[1fr_1fr_auto_auto] sm:items-end">
+      <div className="grid gap-4 sm:grid-cols-[1fr_1fr_auto] sm:items-end">
         <div>
           <label
             className="text-sm font-semibold text-foreground mb-2 block"
@@ -50,10 +53,6 @@ export function AdminTicketFilters({ filters }: AdminTicketFiltersProps) {
             <option value="normal">Apenas Normais</option>
           </select>
         </div>
-
-        <Button type="submit" size="md" className="w-full sm:w-auto">
-          Filtrar
-        </Button>
 
         <Button variant="outline" size="md" href="/admin" className="w-full sm:w-auto">
           Limpar

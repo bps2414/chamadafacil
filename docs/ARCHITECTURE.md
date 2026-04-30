@@ -53,15 +53,18 @@ docs/
 - Use Supabase PostgreSQL for application data.
 - Use Supabase Auth for admin authentication.
 - Use `@supabase/ssr` for cookie-based auth in the Next.js App Router.
-- Create separate Supabase helpers for browser, server component, server action, and middleware contexts as needed.
+- Create separate Supabase helpers for browser, server component, server action, and Next.js Proxy contexts as needed.
 - Use the anonymous key for normal client/server SSR access under RLS.
-- Keep the service role key server-only and use it only for the constrained public lookup operation if RLS cannot safely express exact ticket-number-and-email access.
+- Keep the service role key server-only. It is used only inside Server Actions for constrained public ticket creation, public lookup, and abuse-rate tracking.
+- Do not expose direct anonymous table inserts for public tickets in production. Public creation must pass through server-side validation, same-origin checks, rate limiting, and a fixed insert payload.
 
 ## Authentication Strategy
 
 - The MVP has admin authentication only.
 - Requesters do not create accounts.
 - Admin users are created manually in Supabase or through controlled setup instructions.
+- Public signups must remain disabled in production.
+- Any authenticated Supabase user is intentionally treated as an admin/operator for this single-company MVP. This is only acceptable when the Supabase Auth user list is controlled manually.
 - Protected admin pages use server-side auth checks.
 - Authorization decisions should verify the user with Supabase Auth `getUser()`, not rely only on an unverified session payload.
 - Unauthenticated users visiting `/admin` routes should be redirected to `/admin/login`.
@@ -70,8 +73,8 @@ docs/
 
 Recommended data operations:
 
-- `createTicket`: validates public ticket form and inserts a ticket.
-- `lookupTicket`: validates ticket number and email, then returns only the matching ticket and visible responses.
+- `createTicket`: verifies request origin, validates public ticket form, rate-limits by IP and e-mail, and inserts a safe ticket payload.
+- `lookupTicket`: verifies request origin, validates ticket number and email, rate-limits lookup attempts, then returns only the matching ticket and visible responses.
 - `signInAdmin`: authenticates admin login.
 - `signOutAdmin`: ends the admin session.
 - `listAdminTickets`: reads tickets for the admin dashboard.
@@ -98,6 +101,13 @@ Rules:
 - Never expose `SUPABASE_SERVICE_ROLE_KEY` in client components.
 - Use `NEXT_PUBLIC_` only for values safe to expose in the browser.
 - Document all required variables in `.env.example` during implementation.
+
+## Security Headers And CSRF Model
+
+- Security headers are applied globally in `next.config.ts`.
+- Server Actions rely on Next.js same-origin `Origin`/`Host` validation. Public forms also perform an explicit same-origin guard before rate-limited actions.
+- Admin mutations re-check Supabase Auth inside each Server Action. Page-level route protection is treated as a UX boundary, not the only security boundary.
+- No custom CSRF token is used because the state-changing entry points are Server Actions with same-origin enforcement and server-side authentication checks.
 
 ## Deployment Notes
 

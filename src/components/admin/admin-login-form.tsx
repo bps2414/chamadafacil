@@ -39,7 +39,7 @@ export function AdminLoginForm() {
           </label>
           <input
             autoComplete="email"
-            className="mt-2 h-12 w-full rounded-lg border border-border bg-background px-4 py-3 text-base shadow-sm outline-none transition-colors placeholder:text-muted-foreground/50 focus:border-ring focus:ring-1 focus:ring-ring"
+            className="mt-2 h-12 w-full rounded-lg border border-border bg-background px-4 py-3 text-base shadow-sm outline-none transition-input hover:border-border/80 placeholder:text-muted-foreground/50 focus:border-ring focus:ring-1 focus:ring-ring"
             defaultValue={state.email}
             disabled={pending}
             id="email"
@@ -56,7 +56,7 @@ export function AdminLoginForm() {
           </label>
           <input
             autoComplete="current-password"
-            className="mt-2 h-12 w-full rounded-lg border border-border bg-background px-4 py-3 text-base shadow-sm outline-none transition-colors placeholder:text-muted-foreground/50 focus:border-ring focus:ring-1 focus:ring-ring"
+            className="mt-2 h-12 w-full rounded-lg border border-border bg-background px-4 py-3 text-base shadow-sm outline-none transition-input hover:border-border/80 placeholder:text-muted-foreground/50 focus:border-ring focus:ring-1 focus:ring-ring"
             disabled={pending}
             id="password"
             name="password"

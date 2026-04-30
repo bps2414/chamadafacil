@@ -19,7 +19,7 @@ export function StatCard({
   className = "",
 }: StatCardProps) {
   return (
-    <div className={`p-6 rounded-xl border border-border bg-white shadow-sm flex flex-col ${className}`}>
+    <div className={`p-6 rounded-xl border border-border bg-card shadow-sm flex flex-col ${className}`}>
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-sm font-medium text-muted-foreground">{title}</h3>
         <div className="text-muted-foreground">{icon}</div>

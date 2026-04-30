@@ -57,11 +57,11 @@ export function TicketSummary({ ticket }: TicketSummaryProps) {
       </div>
 
       <div className="py-6 border-b border-border">
-        <h3 className="text-lg font-semibold text-foreground">
+        <h3 className="break-words text-lg font-semibold text-foreground">
           {ticket.subject}
         </h3>
         <div className="mt-4 rounded-xl bg-surface-hover p-4 border border-border/50">
-          <p className="whitespace-pre-wrap text-sm leading-relaxed text-foreground">
+          <p className="whitespace-pre-wrap break-words text-sm leading-relaxed text-foreground">
             {ticket.description}
           </p>
         </div>

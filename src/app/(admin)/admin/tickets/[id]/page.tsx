@@ -19,7 +19,7 @@ import {
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Detalhe do chamado | ChamadaFácil",
+  title: "Detalhe do chamado",
   description: "Gerenciamento protegido de um chamado no ChamadaFácil.",
 };
 

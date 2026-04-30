@@ -1,5 +1,13 @@
 "use server";
 
+import {
+  checkPublicRateLimit,
+  type PublicRateLimitKind,
+} from "@/lib/security/rate-limit";
+import {
+  getClientIpAddress,
+  verifySameOriginRequest,
+} from "@/lib/security/request-guards";
 import { createServiceRoleSupabaseClient } from "@/lib/supabase/service-role";
 import {
   type CreateTicketField,
@@ -69,8 +77,18 @@ export async function createTicketAction(
   _prevState: CreateTicketState,
   formData: FormData,
 ): Promise<CreateTicketState> {
-  const validation = validateCreateTicketForm(formData);
   const values = getCreateTicketValues(formData);
+  const originGuard = await verifySameOriginRequest();
+
+  if (!originGuard.ok) {
+    return {
+      message: originGuard.message,
+      status: "error",
+      values,
+    };
+  }
+
+  const validation = validateCreateTicketForm(formData);
 
   if (!validation.success) {
     return {
@@ -81,6 +99,20 @@ export async function createTicketAction(
   }
 
   try {
+    const rateLimit = await checkPublicTicketRateLimits({
+      email: validation.data.requester_email,
+      emailKind: "ticket_create_email",
+      ipKind: "ticket_create_ip",
+    });
+
+    if (!rateLimit.allowed) {
+      return {
+        message: rateLimit.message,
+        status: "error",
+        values,
+      };
+    }
+
     const supabase = createServiceRoleSupabaseClient();
     const { data, error } = await supabase
       .from("tickets")
@@ -111,7 +143,7 @@ export async function createTicketAction(
   } catch {
     return {
       message:
-        "A conexão com o banco não está configurada. Verifique NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_ANON_KEY.",
+        "A conexão com o banco não está configurada. Verifique NEXT_PUBLIC_SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY.",
       status: "error",
       values,
     };
@@ -122,8 +154,18 @@ export async function lookupTicketAction(
   _prevState: LookupTicketState,
   formData: FormData,
 ): Promise<LookupTicketState> {
-  const validation = validateLookupTicketForm(formData);
   const values = getLookupTicketValues(formData);
+  const originGuard = await verifySameOriginRequest();
+
+  if (!originGuard.ok) {
+    return {
+      message: originGuard.message,
+      status: "error",
+      values,
+    };
+  }
+
+  const validation = validateLookupTicketForm(formData);
 
   if (!validation.success) {
     return {
@@ -134,6 +176,20 @@ export async function lookupTicketAction(
   }
 
   try {
+    const rateLimit = await checkPublicTicketRateLimits({
+      email: validation.data.requester_email,
+      emailKind: "ticket_lookup_email",
+      ipKind: "ticket_lookup_ip",
+    });
+
+    if (!rateLimit.allowed) {
+      return {
+        message: rateLimit.message,
+        status: "error",
+        values,
+      };
+    }
+
     const ticket = await lookupTicket(validation.data);
 
     if (!ticket) {
@@ -203,6 +259,21 @@ async function lookupTicket(input: {
     subject: ticket.subject,
     ticket_number: ticket.ticket_number,
   };
+}
+
+async function checkPublicTicketRateLimits(input: {
+  email: string;
+  emailKind: PublicRateLimitKind;
+  ipKind: PublicRateLimitKind;
+}) {
+  const clientIp = await getClientIpAddress();
+  const ipLimit = await checkPublicRateLimit(input.ipKind, clientIp);
+
+  if (!ipLimit.allowed) {
+    return ipLimit;
+  }
+
+  return checkPublicRateLimit(input.emailKind, input.email);
 }
 
 function getCreateTicketValues(formData: FormData) {

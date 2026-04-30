@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import {
   createTicketAction,
   type CreateTicketState,
@@ -22,12 +22,21 @@ export function TicketForm() {
     initialState,
   );
 
+  // Scroll the success banner into view automatically when ticket is created
+  const successRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    if (state.status === "success" && successRef.current) {
+      successRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [state.status]);
+
   return (
     <div className="mx-auto max-w-4xl">
       {state.status === "success" && state.ticketNumber ? (
         <section
+          ref={successRef}
           aria-live="polite"
-          className="mb-8 rounded-xl border border-accent-foreground/20 bg-accent p-6 sm:p-8 animate-slide-up shadow-sm"
+          className="mb-8 rounded-xl border border-accent-foreground/20 bg-accent p-6 sm:p-8 animate-slide-up shadow-sm scroll-mt-24"
         >
           <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
             <span
@@ -44,15 +53,15 @@ export function TicketForm() {
                 {state.ticketNumber}
               </p>
               <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
-                Guarde este número com cuidado. Você precisará dele e do seu e-mail para acompanhar o status e interagir com a equipe.
+                Guarde este número com cuidado. Você precisará dele e do seu e-mail para acompanhar o status e ler as respostas da equipe.
               </p>
             </div>
           </div>
         </section>
       ) : null}
 
-      <div className="bg-background rounded-2xl border border-border shadow-sm overflow-hidden">
-        <form action={formAction} className="p-6 sm:p-8 lg:p-10 space-y-10">
+      <div className="bg-background rounded-2xl border border-border shadow-sm overflow-hidden animate-slide-up animate-delay-100">
+        <form action={formAction} className="p-4 sm:p-6 lg:p-8 space-y-8 sm:space-y-10">
           <fieldset className="space-y-6">
             <legend className="text-lg font-semibold text-foreground border-b border-border pb-2 w-full mb-6">
               1. Suas Informações
@@ -83,6 +92,7 @@ export function TicketForm() {
                 label="Telefone ou WhatsApp"
                 name="requester_phone"
                 placeholder="(11) 91234-5678"
+                type="tel"
                 value={state.values?.requester_phone}
                 optional
               />
@@ -169,8 +179,8 @@ function DescriptionField({
         <textarea
           aria-describedby={error ? "description-error" : undefined}
           aria-invalid={Boolean(error)}
-          className={`min-h-[160px] w-full resize-y rounded-lg border bg-background px-4 py-3 pr-4 text-base shadow-sm outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-ring focus:ring-1 focus:ring-ring ${
-            error ? "border-destructive" : "border-border"
+          className={`min-h-[160px] w-full resize-y rounded-lg border bg-background px-4 py-3 pr-4 text-base shadow-sm outline-none transition-input placeholder:text-muted-foreground/60 focus:border-ring focus:ring-1 focus:ring-ring ${
+            error ? "border-destructive" : "border-border hover:border-border/80"
           }`}
           defaultValue={value}
           id="description"
@@ -232,8 +242,8 @@ function TextField({
         aria-describedby={error ? errorId : undefined}
         aria-invalid={Boolean(error)}
         autoComplete={autoComplete}
-        className={`mt-2 h-12 w-full rounded-lg border bg-background px-4 py-3 text-base shadow-sm outline-none transition-colors placeholder:text-muted-foreground/60 focus:border-ring focus:ring-1 focus:ring-ring ${
-          error ? "border-destructive" : "border-border"
+        className={`mt-2 h-12 w-full rounded-lg border bg-background px-4 py-3 text-base shadow-sm outline-none transition-input placeholder:text-muted-foreground/60 focus:border-ring focus:ring-1 focus:ring-ring ${
+          error ? "border-destructive" : "border-border hover:border-border/80"
         }`}
         defaultValue={value}
         id={name}

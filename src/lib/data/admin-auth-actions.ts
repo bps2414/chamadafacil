@@ -3,19 +3,21 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
-import type { AdminLoginState } from "@/lib/validation/admin-auth";
+import {
+  type AdminLoginState,
+  validateAdminLoginForm,
+} from "@/lib/validation/admin-auth";
 
 export async function signInAdminAction(
   _prevState: AdminLoginState,
   formData: FormData,
 ): Promise<AdminLoginState> {
-  const email = readString(formData, "email").toLowerCase();
-  const password = readString(formData, "password");
+  const validation = validateAdminLoginForm(formData);
 
-  if (!email || !password) {
+  if (!validation.success) {
     return {
-      email,
-      message: "Informe e-mail e senha para acessar a área administrativa.",
+      email: validation.email,
+      message: validation.message,
       status: "error",
     };
   }
@@ -23,13 +25,13 @@ export async function signInAdminAction(
   try {
     const supabase = await createServerSupabaseClient();
     const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
+      email: validation.data.email,
+      password: validation.data.password,
     });
 
     if (error) {
       return {
-        email,
+        email: validation.data.email,
         message:
           "E-mail ou senha incorretos. Verifique suas credenciais e tente novamente.",
         status: "error",
@@ -37,7 +39,7 @@ export async function signInAdminAction(
     }
   } catch {
     return {
-      email,
+      email: validation.data.email,
       message:
         "Não foi possível conectar ao Supabase. Verifique as variáveis de ambiente.",
       status: "error",
@@ -54,10 +56,4 @@ export async function signOutAdminAction() {
 
   revalidatePath("/admin", "layout");
   redirect("/admin/login");
-}
-
-function readString(formData: FormData, field: string) {
-  const value = formData.get(field);
-
-  return typeof value === "string" ? value.trim() : "";
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect, useRef } from "react";
 import {
   lookupTicketAction,
   type LookupTicketState,
@@ -22,6 +22,15 @@ export function TicketLookupForm() {
     initialState,
   );
 
+  // Scroll to result area after lookup completes
+  const resultRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!pending && state.status !== "idle" && resultRef.current) {
+      resultRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pending]);
+
   return (
     <div className="mx-auto max-w-4xl space-y-8">
       <div className="inline-flex max-w-full items-start gap-3 rounded-lg border border-border bg-background px-5 py-4 text-sm text-muted-foreground shadow-sm animate-fade-in">
@@ -33,9 +42,9 @@ export function TicketLookupForm() {
 
       <form
         action={formAction}
-        className="rounded-2xl border border-border bg-background p-6 shadow-sm sm:p-8"
+        className="rounded-2xl border border-border bg-background p-5 sm:p-8 shadow-sm"
       >
-        <div className="grid gap-6 lg:grid-cols-[1fr_1fr_auto] lg:items-end">
+        <div className="grid gap-5 sm:gap-6 lg:grid-cols-[1fr_1fr_auto] lg:items-end">
           <div>
             <label className="text-sm font-semibold text-foreground flex items-center justify-between" htmlFor="ticket_number">
               <span>Número do chamado</span>
@@ -45,8 +54,8 @@ export function TicketLookupForm() {
                 state.errors?.ticket_number ? "ticket-number-error" : undefined
               }
               aria-invalid={Boolean(state.errors?.ticket_number)}
-              className={`mt-2 h-12 w-full rounded-lg border bg-background px-4 py-3 text-base uppercase shadow-sm outline-none transition-colors placeholder:text-muted-foreground/50 focus:border-ring focus:ring-1 focus:ring-ring ${
-                state.errors?.ticket_number ? "border-destructive" : "border-border"
+              className={`mt-2 h-12 w-full rounded-lg border bg-background px-4 py-3 text-base uppercase shadow-sm outline-none transition-input placeholder:text-muted-foreground/50 focus:border-ring focus:ring-1 focus:ring-ring ${
+                state.errors?.ticket_number ? "border-destructive" : "border-border hover:border-border/80"
               }`}
               defaultValue={state.values?.ticket_number}
               id="ticket_number"
@@ -70,8 +79,8 @@ export function TicketLookupForm() {
               }
               aria-invalid={Boolean(state.errors?.requester_email)}
               autoComplete="email"
-              className={`mt-2 h-12 w-full rounded-lg border bg-background px-4 py-3 text-base shadow-sm outline-none transition-colors placeholder:text-muted-foreground/50 focus:border-ring focus:ring-1 focus:ring-ring ${
-                state.errors?.requester_email ? "border-destructive" : "border-border"
+              className={`mt-2 h-12 w-full rounded-lg border bg-background px-4 py-3 text-base shadow-sm outline-none transition-input placeholder:text-muted-foreground/50 focus:border-ring focus:ring-1 focus:ring-ring ${
+                state.errors?.requester_email ? "border-destructive" : "border-border hover:border-border/80"
               }`}
               defaultValue={state.values?.requester_email}
               id="requester_email"
@@ -90,13 +99,16 @@ export function TicketLookupForm() {
             type="submit"
             size="lg"
             isLoading={pending}
-            className="w-full lg:w-48 lg:mb-[2px]" // 2px to perfectly align with inputs (accounting for labels)
+            className="w-full lg:w-48 lg:mb-[2px] mt-2 lg:mt-0" 
           >
             {!pending && <SearchIcon className="mr-2 h-5 w-5" />}
             {pending ? "Buscando..." : "Consultar"}
           </Button>
         </div>
       </form>
+
+      {/* Result anchor — scroll target */}
+      <div ref={resultRef} className="scroll-mt-24" />
 
       {/* Loading Skeleton */}
       {pending && (

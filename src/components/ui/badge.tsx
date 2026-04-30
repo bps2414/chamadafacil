@@ -25,11 +25,11 @@ export function Badge({
   const baseStyles = "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border";
   
   const variantStyles: Record<BadgeVariant, string> = {
-    default: "bg-muted text-foreground border-transparent",
+    default: "bg-muted/50 text-muted-foreground border-transparent",
     primary: "bg-primary/10 text-primary border-primary/20",
     secondary: "bg-secondary text-secondary-foreground border-transparent",
-    success: "bg-accent text-accent-foreground border-accent-foreground/20",
-    warning: "bg-amber-100 text-amber-800 border-amber-200",
+    success: "bg-success/10 text-success border-success/20",
+    warning: "bg-warning/10 text-warning border-warning/20",
     destructive: "bg-destructive/10 text-destructive border-destructive/20",
     outline: "bg-transparent text-foreground border-border",
   };
@@ -38,8 +38,8 @@ export function Badge({
     default: "bg-muted-foreground",
     primary: "bg-primary",
     secondary: "bg-secondary-foreground",
-    success: "bg-accent-foreground",
-    warning: "bg-amber-500",
+    success: "bg-success",
+    warning: "bg-warning",
     destructive: "bg-destructive",
     outline: "bg-foreground",
   };
