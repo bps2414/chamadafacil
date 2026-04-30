@@ -57,6 +57,7 @@ Prints finais anexados para o preview do projeto, usando dados fictícios e sem 
 | Consulta de chamado | ![Tela de consulta de chamado](./public/screenshots/ticket-lookup-form.png) |
 | Login admin | ![Login administrativo](./public/screenshots/admin-login.png) |
 | Dashboard admin | ![Dashboard administrativo](./public/screenshots/admin-dashboard.png) |
+| Detalhe do chamado admin | ![Detalhe administrativo do chamado](./public/screenshots/admin-ticket-detail.png) |
 
 ## Funcionalidades Principais
 

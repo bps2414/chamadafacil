@@ -57,6 +57,7 @@ Final attached screenshots prepared for the project preview, using fictional dat
 | Ticket lookup | ![Ticket lookup screen](./public/screenshots/ticket-lookup-form.png) |
 | Admin login | ![Admin login](./public/screenshots/admin-login.png) |
 | Admin dashboard | ![Admin dashboard](./public/screenshots/admin-dashboard.png) |
+| Admin ticket detail | ![Admin ticket detail](./public/screenshots/admin-ticket-detail.png) |
 
 ## Core Features
 
