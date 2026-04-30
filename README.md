@@ -305,6 +305,7 @@ Os nomes, e-mails e empresas do seed são dados fictícios de demonstração. El
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
+SITE_URL=https://chamadafacil.vercel.app
 ```
 
 | Variável | Exposição | Uso |
@@ -312,6 +313,7 @@ SUPABASE_SERVICE_ROLE_KEY=
 | `NEXT_PUBLIC_SUPABASE_URL` | Pública/browser-safe | URL do projeto Supabase. |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Pública/browser-safe | Chave pública usada com RLS. |
 | `SUPABASE_SERVICE_ROLE_KEY` | Somente servidor | Fluxos públicos controlados e rate limit. |
+| `SITE_URL` | Pública/canônica | Domínio final usado em canonical, Open Graph, robots e sitemap. |
 
 Observações:
 

@@ -305,6 +305,7 @@ The names, e-mails, and companies in the seed data are fictional demo records. T
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
+SITE_URL=https://chamadafacil.vercel.app
 ```
 
 | Variable | Exposure | Purpose |
@@ -312,6 +313,7 @@ SUPABASE_SERVICE_ROLE_KEY=
 | `NEXT_PUBLIC_SUPABASE_URL` | Public/browser-safe | Supabase project URL. |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Public/browser-safe | Public anon key used with RLS. |
 | `SUPABASE_SERVICE_ROLE_KEY` | Server-only | Controlled public workflows and rate limiting. |
+| `SITE_URL` | Public/canonical | Final domain used by canonical, Open Graph, robots, and sitemap. |
 
 Notes:
 

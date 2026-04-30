@@ -12,6 +12,19 @@ O alvo principal do MVP é Vercel com um projeto Supabase hospedado. Cloudflare 
 - Node.js `20.9.0` ou superior para validação local.
 - Supabase CLI autenticado, caso vá aplicar migrations via terminal.
 
+## Status desta publicação
+
+| Item | Status |
+| --- | --- |
+| URL final planejada | `https://chamadafacil.vercel.app` |
+| Repositório GitHub | `https://github.com/bps2414/chamadafacil` |
+| Public signups no Supabase | Desativado |
+| Migrations no Supabase remoto | Aplicadas |
+| Admin de produção | Criado manualmente |
+| Usuário admin de teste | Removido da produção |
+| Deploy Vercel | Pendente de execução no painel da Vercel |
+| Smoke test pós-deploy | Pendente após o deploy |
+
 ## 2. Checklist Antes do Deploy
 
 Antes de publicar:
@@ -40,6 +53,7 @@ Configure estas variáveis na Vercel para Production e Preview:
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
+SITE_URL=https://chamadafacil.vercel.app
 ```
 
 | Variável | Onde obter | Exposição |
@@ -47,6 +61,7 @@ SUPABASE_SERVICE_ROLE_KEY=
 | `NEXT_PUBLIC_SUPABASE_URL` | Supabase Project Settings > API > Project URL | Pública |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase Project Settings > API > anon public key | Pública |
 | `SUPABASE_SERVICE_ROLE_KEY` | Supabase Project Settings > API > service_role key | Somente servidor |
+| `SITE_URL` | Domínio final de produção, sem barra final | Pública/canônica |
 
 Regras:
 
@@ -55,6 +70,7 @@ Regras:
 - Nunca coloque a service role key com prefixo `NEXT_PUBLIC_`.
 - Nunca publique a service role key em README, screenshots, logs ou issues.
 - Se a service role key vazar, rotacione no Supabase antes de continuar.
+- `SITE_URL` deve ser exatamente o domínio enviado ao Google Search Console. Ela alimenta canonical, Open Graph, `robots.txt` e `sitemap.xml`.
 
 ## 4. Preparar Supabase em Produção
 
@@ -96,10 +112,11 @@ Essa gestão manual de usuários faz parte do limite de segurança do MVP.
 1. Publique o repositório no GitHub.
 2. Acesse a Vercel.
 3. Clique em Add New Project.
-4. Importe o repositório do ChamadaFácil.
+4. Importe o repositório `https://github.com/bps2414/chamadafacil`.
 5. Confirme Framework Preset: Next.js.
 6. Adicione as variáveis de ambiente.
-7. Execute o primeiro deploy.
+7. Confirme o domínio `chamadafacil.vercel.app`.
+8. Execute o primeiro deploy.
 
 Configuração esperada:
 
@@ -152,6 +169,8 @@ Recomendado:
 - Resetar dados de demo periodicamente se a demo for aberta para visitantes.
 
 Quando a demo estiver publicada, adicione a URL final no README, no estudo de caso e no card do portfólio. Antes disso, mantenha a documentação dizendo explicitamente que a demo ainda não foi publicada.
+
+Neste repositório, a URL final e o GitHub já foram preenchidos nos materiais de portfólio. Depois do deploy, falta apenas executar o smoke test e confirmar se `https://chamadafacil.vercel.app` responde com a versão publicada.
 
 ## 9. Checklist de Segurança de Produção
 

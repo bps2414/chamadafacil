@@ -1,4 +1,6 @@
-export const SITE_URL = "https://chamadafacil.vercel.app";
+const FALLBACK_SITE_URL = "https://chamadafacil.vercel.app";
+
+export const SITE_URL = getSiteUrl();
 
 export const SITE_NAME = "ChamadaFácil";
 export const SITE_TITLE = "ChamadaFácil - Sistema de Chamados";
@@ -22,3 +24,20 @@ export const SEO_KEYWORDS = [
   "gestao de tickets",
   "ChamadaFácil",
 ];
+
+function getSiteUrl() {
+  const value =
+    process.env.SITE_URL ||
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    process.env.VERCEL_PROJECT_PRODUCTION_URL ||
+    FALLBACK_SITE_URL;
+
+  const url = value.startsWith("http") ? value : `https://${value}`;
+
+  try {
+    const parsed = new URL(url);
+    return parsed.origin;
+  } catch {
+    return FALLBACK_SITE_URL;
+  }
+}
