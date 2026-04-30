@@ -19,6 +19,9 @@ export const metadata: Metadata = {
   publisher: SITE_NAME,
   keywords: SEO_KEYWORDS,
   category: "technology",
+  verification: {
+    google: "jPJgOlswCGOQOPXHPAqKAFXaLVktgeuj2nS4R3JRMyE",
+  },
   manifest: "/manifest.webmanifest",
   icons: {
     icon: [

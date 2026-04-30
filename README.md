@@ -9,14 +9,7 @@
 </p>
 
 <p align="center">
-  <img alt="Next.js" src="https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=nextdotjs" />
-  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-6-3178C6?style=for-the-badge&logo=typescript&logoColor=white" />
-  <img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind_CSS-4-38B2AC?style=for-the-badge&logo=tailwindcss&logoColor=white" />
-  <img alt="Supabase" src="https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white" />
-</p>
-
-<p align="center">
-  <a href="#preview-visual">Preview</a>
+  <a href="#screenshots">Screenshots</a>
   ·
   <a href="./docs/CASE_STUDY.md">Estudo de caso</a>
   ·
@@ -33,8 +26,8 @@
 
 | Recurso | Link |
 | --- | --- |
-| Demo | Ainda não publicada. Adicione a URL final após o deploy. |
-| Repositório | Adicione a URL pública após publicar no GitHub. |
+| Demo | [chamadafacil.vercel.app](https://chamadafacil.vercel.app/) |
+| Repositório | [github.com/bps2414/chamadafacil](https://github.com/bps2414/chamadafacil) |
 | Estudo de caso | [docs/CASE_STUDY.md](./docs/CASE_STUDY.md) |
 | Versão em inglês | [README.en.md](./README.en.md) |
 | Guia de deploy | [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md) |
@@ -55,7 +48,15 @@ O fluxo foi desenhado para dois perfis:
 
 ## Screenshots
 
-Os arquivos em `docs/visual-reference/screens/` foram mantidos como referência visual, mas não devem ser tratados como screenshots finais do produto. Antes de publicar o projeto no portfólio, capture novos prints da demo atual seguindo [docs/SCREENSHOTS_CHECKLIST.md](./docs/SCREENSHOTS_CHECKLIST.md).
+Prints finais anexados para o preview do projeto, usando dados fictícios e sem credenciais reais.
+
+| Tela | Preview |
+| --- | --- |
+| Landing page | ![Landing page do ChamadaFácil](./public/screenshots/landing-desktop.png) |
+| Abertura de chamado | ![Formulário de abertura de chamado](./public/screenshots/ticket-new-form.png) |
+| Consulta de chamado | ![Tela de consulta de chamado](./public/screenshots/ticket-lookup-form.png) |
+| Login admin | ![Login administrativo](./public/screenshots/admin-login.png) |
+| Dashboard admin | ![Dashboard administrativo](./public/screenshots/admin-dashboard.png) |
 
 ## Funcionalidades Principais
 

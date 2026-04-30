@@ -9,14 +9,7 @@
 </p>
 
 <p align="center">
-  <img alt="Next.js" src="https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=nextdotjs" />
-  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-6-3178C6?style=for-the-badge&logo=typescript&logoColor=white" />
-  <img alt="Tailwind CSS" src="https://img.shields.io/badge/Tailwind_CSS-4-38B2AC?style=for-the-badge&logo=tailwindcss&logoColor=white" />
-  <img alt="Supabase" src="https://img.shields.io/badge/Supabase-PostgreSQL-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white" />
-</p>
-
-<p align="center">
-  <a href="#visual-preview">Preview</a>
+  <a href="#screenshots">Screenshots</a>
   ·
   <a href="./docs/CASE_STUDY.en.md">Case study</a>
   ·
@@ -33,8 +26,8 @@
 
 | Resource | Link |
 | --- | --- |
-| Demo | Not published yet. Add the final URL after deployment. |
-| Repository | Add the public GitHub URL after publishing. |
+| Demo | [chamadafacil.vercel.app](https://chamadafacil.vercel.app/) |
+| Repository | [github.com/bps2414/chamadafacil](https://github.com/bps2414/chamadafacil) |
 | Case study | [docs/CASE_STUDY.en.md](./docs/CASE_STUDY.en.md) |
 | Portuguese README | [README.md](./README.md) |
 | Deployment guide | [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md) |
@@ -55,7 +48,15 @@ The project has two main user groups:
 
 ## Screenshots
 
-The files in `docs/visual-reference/screens/` are kept as visual references, but they should not be treated as final product screenshots. Before publishing the project in a portfolio, capture fresh screenshots from the current demo using [docs/SCREENSHOTS_CHECKLIST.md](./docs/SCREENSHOTS_CHECKLIST.md).
+Final attached screenshots prepared for the project preview, using fictional data and no real credentials.
+
+| Screen | Preview |
+| --- | --- |
+| Landing page | ![ChamadaFácil landing page](./public/screenshots/landing-desktop.png) |
+| Ticket creation | ![Ticket creation form](./public/screenshots/ticket-new-form.png) |
+| Ticket lookup | ![Ticket lookup screen](./public/screenshots/ticket-lookup-form.png) |
+| Admin login | ![Admin login](./public/screenshots/admin-login.png) |
+| Admin dashboard | ![Admin dashboard](./public/screenshots/admin-dashboard.png) |
 
 ## Core Features
 
