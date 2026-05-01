@@ -1,234 +1,117 @@
-# ChamadaFácil
+# ChamadaFacil
 
-<p align="center">
-  <strong>Sistema web de chamados para pequenos negócios no Brasil.</strong>
-</p>
+Sistema web de chamados para pequenos negocios no Brasil, com abertura publica sem conta, consulta por codigo/e-mail e painel admin protegido para operar a fila de atendimento.
 
-<p align="center">
-  Uma aplicação full-stack para abrir, acompanhar e gerenciar solicitações de suporte em um fluxo simples, seguro e organizado.
-</p>
+> Status: MVP funcional de portfolio. O projeto demonstra um fluxo realista de help desk single-company, sem prometer multiempresa, RBAC completo, anexos, e-mail automatico ou SaaS enterprise.
 
-<p align="center">
-  <a href="#screenshots">Screenshots</a>
-  ·
-  <a href="./docs/CASE_STUDY.md">Estudo de caso</a>
-  ·
-  <a href="./docs/SECURITY.md">Segurança</a>
-  ·
-  <a href="./docs/DEPLOYMENT.md">Deploy</a>
-  ·
-  <a href="./README.en.md">English version</a>
-</p>
+## Caminho Rapido Para Avaliar
 
-> Status: MVP funcional de portfólio. O projeto foi construído para demonstrar fundamentos de desenvolvimento web full-stack em um cenário realista de help desk interno, sem prometer escopo além do que está implementado.
+1. Abra a demo: [chamadafacil.vercel.app](https://chamadafacil.vercel.app/).
+2. Veja o fluxo publico em `/tickets/new`: crie um chamado e copie o codigo gerado.
+3. Consulte o chamado em `/tickets/lookup` usando codigo e e-mail.
+4. Revise o painel admin no README/case study e, localmente, acesse `/admin/login` com o seed de desenvolvimento.
+5. Confira os pontos tecnicos: Server Actions, Supabase Auth, PostgreSQL/RLS, validacao server-side, rate limit basico e testes unitarios.
 
-## Links
+Links uteis:
 
 | Recurso | Link |
 | --- | --- |
 | Demo | [chamadafacil.vercel.app](https://chamadafacil.vercel.app/) |
-| Repositório | [github.com/bps2414/chamadafacil](https://github.com/bps2414/chamadafacil) |
+| Repositorio | [github.com/bps2414/chamadafacil](https://github.com/bps2414/chamadafacil) |
 | Estudo de caso | [docs/CASE_STUDY.md](./docs/CASE_STUDY.md) |
-| Versão em inglês | [README.en.md](./README.en.md) |
-| Guia de deploy | [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md) |
-| Textos para portfólio | [docs/PORTFOLIO_COPY.md](./docs/PORTFOLIO_COPY.md) |
-| Bullets para currículo | [docs/RESUME_BULLETS.md](./docs/RESUME_BULLETS.md) |
-| Checklist final | [docs/FINAL_PORTFOLIO_CHECKLIST.md](./docs/FINAL_PORTFOLIO_CHECKLIST.md) |
+| Security notes | [docs/SECURITY.md](./docs/SECURITY.md) |
+| Deploy | [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md) |
+| Textos de portfolio | [docs/PORTFOLIO_COPY.md](./docs/PORTFOLIO_COPY.md) |
+| English README | [README.en.md](./README.en.md) |
 
-## Sobre o Projeto
+## O Que E o Projeto
 
-O ChamadaFácil é um sistema web de chamados/help desk pensado para pequenos negócios que precisam organizar pedidos de suporte sem depender de planilhas, conversas perdidas ou processos informais.
+O ChamadaFacil foi criado para resolver um problema comum em pequenos negocios: pedidos de suporte espalhados entre WhatsApp, e-mail, ligacoes e planilhas. O produto organiza o essencial:
 
-O modelo do projeto é single-company/single-tenant: uma empresa usa a ferramenta internamente para receber solicitações públicas e gerenciar o atendimento por um painel administrativo protegido.
+- Solicitante abre chamado sem criar conta.
+- Sistema gera um codigo unico do chamado.
+- Solicitante consulta andamento com codigo e e-mail.
+- Operador autenticado gerencia fila, status, urgencia e respostas.
 
-O fluxo foi desenhado para dois perfis:
-
-- Usuários públicos, que abrem chamados sem criar conta e consultam o andamento com código do chamado e e-mail.
-- Administradores/operadores, que fazem login e gerenciam fila, status, urgência e respostas.
+O escopo atual e single-company/single-tenant: uma empresa usa a ferramenta internamente. Essa decisao mantem o MVP pequeno, avaliavel e coerente para portfolio.
 
 ## Screenshots
 
-Prints finais anexados para o preview do projeto, usando dados fictícios e sem credenciais reais.
+Prints usam dados ficticios e nao devem expor variaveis de ambiente, tokens, cookies ou credenciais reais.
 
 | Tela | Preview |
 | --- | --- |
-| Landing page | ![Landing page do ChamadaFácil](./public/screenshots/landing-desktop.png) |
-| Abertura de chamado | ![Formulário de abertura de chamado](./public/screenshots/ticket-new-form.png) |
+| Landing page | ![Landing page do ChamadaFacil](./public/screenshots/landing-desktop.png) |
+| Abertura de chamado | ![Formulario de abertura de chamado](./public/screenshots/ticket-new-form.png) |
 | Consulta de chamado | ![Tela de consulta de chamado](./public/screenshots/ticket-lookup-form.png) |
 | Login admin | ![Login administrativo](./public/screenshots/admin-login.png) |
 | Dashboard admin | ![Dashboard administrativo](./public/screenshots/admin-dashboard.png) |
-| Detalhe do chamado admin | ![Detalhe administrativo do chamado](./public/screenshots/admin-ticket-detail.png) |
+| Detalhe admin | ![Detalhe administrativo do chamado](./public/screenshots/admin-ticket-detail.png) |
 
-## Funcionalidades Principais
+Checklist completo em [docs/SCREENSHOTS_CHECKLIST.md](./docs/SCREENSHOTS_CHECKLIST.md).
 
-| Área | Funcionalidade | Status |
-| --- | --- | --- |
-| Público | Landing page em português brasileiro | Implementado |
-| Público | Abertura de chamados sem cadastro | Implementado |
-| Público | Geração automática de código do chamado | Implementado |
-| Público | Consulta por código do chamado e e-mail | Implementado |
-| Público | Visualização de status, urgência, descrição e respostas | Implementado |
-| Admin | Login administrativo com Supabase Auth | Implementado |
-| Admin | Dashboard protegido | Implementado |
-| Admin | Listagem responsiva de chamados | Implementado |
-| Admin | Filtros por status e urgência | Implementado |
-| Admin | Detalhe do chamado com dados do solicitante | Implementado |
-| Admin | Atualização de status e urgência | Implementado |
-| Admin | Respostas públicas do operador | Implementado |
-| UX | Estados de loading, empty, erro e sucesso | Implementado |
-| UX | Interface responsiva/mobile | Implementado |
-| Segurança | RLS, validação server-side e rate limit básico | Implementado |
-| Produto | Base de conhecimento | Não implementado; melhoria futura |
+## Funcionalidades Implementadas
 
-## Fluxo do Usuário Público
+### Fluxo Publico
 
-1. Acessa a página inicial.
-2. Abre um chamado em `/tickets/new`.
-3. Informa nome, e-mail, telefone opcional, assunto e descrição.
-4. Recebe um código no formato `CF-2026-00001`.
-5. Consulta o andamento em `/tickets/lookup`.
-6. Informa código do chamado e e-mail.
-7. Visualiza status, urgência, descrição original e respostas da equipe.
+- Landing page em portugues brasileiro.
+- Abertura de chamado sem cadastro.
+- Validacao server-side de nome, e-mail, telefone, assunto e descricao.
+- Geracao automatica de numero no formato `CF-YYYY-00000`.
+- Estado de sucesso com codigo destacado, botao de copiar e CTA para consulta.
+- Consulta por numero do chamado e e-mail.
+- Resultado com status, urgencia, descricao original e respostas publicas.
+- Mensagem neutra quando a combinacao codigo/e-mail nao encontra chamado.
 
-## Fluxo do Administrador
+### Painel Admin
 
-1. Acessa `/admin/login`.
-2. Entra com uma conta criada manualmente no Supabase Auth.
-3. Visualiza o dashboard em `/admin`.
-4. Filtra chamados por status e urgência.
-5. Abre o detalhe de um chamado.
-6. Atualiza status e marca ou remove urgência.
-7. Publica uma resposta visível para o solicitante.
-8. Define o chamado como resolvido quando o atendimento termina.
+- Login administrativo com Supabase Auth.
+- Rotas `/admin` protegidas por Proxy e checagens server-side.
+- Dashboard com estatisticas resumidas.
+- Lista responsiva: tabela no desktop e cards no mobile.
+- Filtros por status, urgencia e resposta.
+- Busca por numero, assunto e solicitante.
+- Ordenacao por atualizacao, criacao e urgencia.
+- Destaque para chamados urgentes e sem resposta.
+- Detalhe do chamado com dados do solicitante e timeline.
+- Atualizacao de status, urgencia e resposta publica ao solicitante.
+
+### Qualidade e Seguranca
+
+- PostgreSQL com migrations e constraints.
+- Row Level Security em tabelas do app.
+- Server Actions para criacao, consulta e mutacoes admin.
+- Validacao server-side para formularios publicos e administrativos.
+- Same-origin guard nos fluxos publicos.
+- Rate limit basico por IP/e-mail com identificadores em hash.
+- `SUPABASE_SERVICE_ROLE_KEY` usada apenas em codigo server-side.
+- Headers de seguranca em `next.config.ts`.
+- Testes unitarios com Vitest para validacoes, filtros e regras puras.
 
 ## Stack
 
 | Camada | Tecnologia |
 | --- | --- |
-| Framework web | Next.js App Router |
-| Linguagem | TypeScript |
-| UI | React e Tailwind CSS |
-| Autenticação | Supabase Auth |
-| Banco de dados | Supabase PostgreSQL |
-| Segurança de dados | Supabase Row Level Security |
-| Data access | Server Components, Server Actions e helpers Supabase |
-| Deploy web | Vercel como alvo principal |
+| Framework | Next.js App Router |
+| UI | React, TypeScript e Tailwind CSS |
+| Auth | Supabase Auth |
+| Banco | Supabase PostgreSQL |
+| Seguranca de dados | Supabase RLS |
+| Mutacoes | Server Actions |
+| Testes | Vitest |
+| Deploy alvo | Vercel |
 
-Versões principais confirmadas no `package.json`:
+Versoes principais estao em [`package.json`](./package.json).
 
-- Next.js `^16.2.4`
-- React `^19.2.5`
-- TypeScript `^6.0.3`
-- Tailwind CSS `^4.2.4`
-- `@supabase/supabase-js` `^2.105.1`
-- `@supabase/ssr` `^0.10.2`
+## Decisoes Tecnicas
 
-## Arquitetura Resumida
-
-```text
-src/
-  app/
-    (public)/
-      page.tsx
-      tickets/new/page.tsx
-      tickets/lookup/page.tsx
-    (admin)/
-      admin/login/page.tsx
-      admin/page.tsx
-      admin/tickets/[id]/page.tsx
-  components/
-    admin/
-    tickets/
-    ui/
-  lib/
-    data/
-    security/
-    supabase/
-    validation/
-supabase/
-  migrations/
-  seed.sql
-docs/
-```
-
-### Rotas públicas
-
-- `/`
-- `/tickets/new`
-- `/tickets/lookup`
-- `/abrir-chamado`, redireciona para `/tickets/new`
-- `/consultar-chamado`, redireciona para `/tickets/lookup`
-
-### Rotas privadas
-
-- `/admin/login`
-- `/admin`
-- `/admin/tickets/[id]`
-- `/admin/tickets`, redireciona para `/admin`
-
-### Como as camadas se conectam
-
-- Páginas do App Router renderizam as telas públicas e privadas.
-- Server Actions processam criação, consulta, login, atualização de chamados e respostas.
-- `src/lib/validation` concentra validações de formulário.
-- `src/lib/data` concentra operações de dados e regras de fluxo.
-- `src/lib/security` contém guarda de mesma origem e rate limit.
-- Supabase Auth controla sessão administrativa.
-- PostgreSQL armazena tickets, respostas e eventos de rate limit.
-- RLS protege o acesso direto às tabelas.
-
-## Modelo de Dados
-
-| Tabela | Descrição |
-| --- | --- |
-| `tickets` | Chamados abertos por usuários públicos. Guarda solicitante, assunto, descrição, status, urgência e datas. |
-| `ticket_responses` | Respostas públicas criadas por administradores e exibidas na consulta do chamado. |
-| `public_rate_limits` | Eventos de controle de abuso para formulários públicos, com identificadores em hash. |
-| `auth.users` | Usuários autenticados do Supabase usados como operadores/admins no MVP. |
-
-Status disponíveis:
-
-- `open`: chamado aberto.
-- `in_progress`: chamado em atendimento.
-- `resolved`: chamado resolvido.
-
-Prioridade atual:
-
-- `is_urgent = false`: normal.
-- `is_urgent = true`: urgente.
-
-Não há tabela de base de conhecimento no MVP atual.
-
-## Segurança
-
-O projeto usa um modelo honesto e proporcional ao escopo de MVP single-company.
-
-Medidas implementadas:
-
-- Autenticação administrativa com Supabase Auth.
-- Proteção das rotas `/admin` por Next.js Proxy e checagens server-side.
-- Revalidação de usuário autenticado dentro das Server Actions administrativas.
-- RLS habilitado em `tickets`, `ticket_responses` e `public_rate_limits`.
-- Criação e consulta pública de chamados mediadas por Server Actions.
-- Validação server-side dos formulários.
-- Verificação de mesma origem em ações públicas.
-- Rate limit básico por IP e e-mail, armazenando hashes.
-- `SUPABASE_SERVICE_ROLE_KEY` usado apenas no servidor.
-- Headers de segurança configurados em `next.config.ts`.
-
-Limitação consciente:
-
-No MVP, qualquer usuário autenticado no Supabase é tratado como operador/admin. Isso é aceitável para uma ferramenta interna de empresa única somente se o cadastro público estiver desativado em produção e os usuários forem criados manualmente.
-
-Melhorias futuras de segurança:
-
-- RBAC com papéis como `admin`, `operator` e `viewer`.
-- Permissões por ação.
-- Auditoria avançada de mudanças.
-- Rate limit em camada edge/WAF.
-- Separação multiempresa caso o produto evolua para SaaS.
-
-Leia mais em [docs/SECURITY.md](./docs/SECURITY.md).
+- App Router separa area publica e area admin.
+- Server Actions concentram validacao, autorizacao e mutacoes.
+- RLS evita acesso direto indevido as tabelas.
+- Consulta publica exige codigo e e-mail para reduzir exposicao de chamados.
+- Admin e tratado como ferramenta interna: usuarios sao criados manualmente no Supabase.
+- Filtros admin ficam na URL para permitir recarregar e compartilhar estado.
+- Regras puras e validacoes foram isoladas para testes sem depender do banco.
 
 ## Como Rodar Localmente
 
@@ -237,69 +120,62 @@ Requisitos:
 - Node.js `20.9.0` ou superior.
 - npm.
 - Supabase CLI.
-- Docker Desktop, caso queira rodar Supabase local.
+- Docker Desktop, se for rodar Supabase local.
 
-Instale as dependências:
+Instale dependencias:
 
 ```bash
 npm install
 ```
 
-Crie o arquivo de ambiente:
+Crie o arquivo local de ambiente:
 
 ```bash
 cp .env.example .env.local
 ```
 
-No Windows PowerShell, use:
+No Windows PowerShell:
 
 ```powershell
 Copy-Item .env.example .env.local
 ```
 
-Preencha as variáveis em `.env.local`.
+Preencha as variaveis em `.env.local`.
 
-Para usar Supabase local:
+Suba o Supabase local e aplique migrations/seed:
 
 ```bash
 npm run supabase:start
-npm run supabase:status
 npm run supabase:db:reset
 ```
 
-`supabase db reset` aplica as migrations e executa `supabase/seed.sql`.
-
-Rode a aplicação:
+Rode a aplicacao:
 
 ```bash
 npm run dev
 ```
 
-Acesse:
+Acesse `http://localhost:3000`.
 
-```text
-http://localhost:3000
-```
-
-Login local criado pelo seed:
+Admin local criado pelo seed:
 
 ```text
 E-mail: admin@chamadafacil.com.br
 Senha: admin123
 ```
 
-Esse usuário é apenas para desenvolvimento local. Não publique essa credencial como demo de produção.
+Esse usuario e apenas para desenvolvimento local. Nao publique essa credencial como login de demo em producao.
 
-Chamado local para consulta após o seed:
+Chamado local para consulta apos o seed:
 
 ```text
 Ticket: CF-2026-00001
 E-mail: juliana.martins@padariabona.com.br
 ```
 
-Os nomes, e-mails e empresas do seed são dados fictícios de demonstração. Eles não representam empresas atendidas pelo projeto.
+Os dados do seed sao ficticios.
 
-## Variáveis de Ambiente
+## Variaveis de Ambiente
 
 ```env
 NEXT_PUBLIC_SUPABASE_URL=
@@ -308,103 +184,20 @@ SUPABASE_SERVICE_ROLE_KEY=
 SITE_URL=https://chamadafacil.vercel.app
 ```
 
-| Variável | Exposição | Uso |
+| Variavel | Exposicao | Uso |
 | --- | --- | --- |
-| `NEXT_PUBLIC_SUPABASE_URL` | Pública/browser-safe | URL do projeto Supabase. |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Pública/browser-safe | Chave pública usada com RLS. |
-| `SUPABASE_SERVICE_ROLE_KEY` | Somente servidor | Fluxos públicos controlados e rate limit. |
-| `SITE_URL` | Pública/canônica | Domínio final usado em canonical, Open Graph, robots e sitemap. |
+| `NEXT_PUBLIC_SUPABASE_URL` | Publica/browser-safe | URL do projeto Supabase. |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Publica/browser-safe | Chave anon publica usada com RLS. |
+| `SUPABASE_SERVICE_ROLE_KEY` | Somente servidor | Fluxos publicos controlados e rate limit. |
+| `SITE_URL` | Publica/canonica | Canonical, Open Graph, robots e sitemap. |
 
-Observações:
+Nunca use `NEXT_PUBLIC_` na service role key e nunca coloque segredos reais em README, screenshots, logs ou issues.
 
-- Variáveis com prefixo `NEXT_PUBLIC_` podem ir para o bundle do navegador.
-- Nunca use `NEXT_PUBLIC_` na service role key.
-- Nunca coloque segredos reais em README, screenshots, logs ou issues públicas.
-- Em deploy, configure as variáveis no provedor antes de rodar o build.
-
-## Setup do Supabase
-
-1. Crie um projeto no Supabase.
-2. Copie a Project URL e a anon public key para `.env.local`.
-3. Copie a service role key apenas para ambiente servidor.
-4. Rode as migrations localmente ou aplique no projeto remoto.
-5. Em produção, desative cadastro público no Supabase Auth.
-6. Crie ou convide operadores manualmente em Authentication > Users.
-7. Confirme que apenas pessoas autorizadas existem em `auth.users`.
-
-Fluxo local:
-
-```bash
-npm run supabase:start
-npm run supabase:db:reset
-```
-
-Fluxo remoto:
-
-```bash
-npm run supabase:link
-npx supabase db push
-```
-
-Não envie seed local com credenciais de desenvolvimento para produção.
-
-## Deploy
-
-O alvo principal documentado é Vercel, por ser o caminho mais direto para Next.js App Router neste MVP.
-
-Checklist:
-
-1. Publicar o repositório no GitHub.
-2. Importar o projeto na Vercel.
-3. Confirmar o preset de framework como Next.js.
-4. Configurar `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` e `SUPABASE_SERVICE_ROLE_KEY`.
-5. Aplicar migrations no Supabase remoto.
-6. Desativar public signups no Supabase Auth.
-7. Criar admin/operador manualmente.
-8. Rodar smoke test das rotas públicas e privadas.
-
-Comandos finais de verificação:
-
-```bash
-npm run lint
-npm run typecheck
-npm run build
-```
-
-Leia o guia de deploy em [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md).
-
-## Roadmap
-
-Melhorias planejadas, não implementadas no MVP atual:
-
-- RBAC com permissões por papel.
-- Multiempresa/multi-tenant.
-- Notificações por e-mail.
-- Upload de anexos.
-- Histórico/auditoria avançada.
-- SLA, vencimentos e indicadores de atraso.
-- Dashboard com métricas mais completas.
-- Exportação CSV.
-- Base de conhecimento.
-- Notas internas para operadores.
-
-## Aprendizados Demonstrados
-
-- Modelagem de dados para fluxo de atendimento.
-- Criação de migrations PostgreSQL.
-- Autenticação com Supabase Auth.
-- Proteção de dados com RLS.
-- Server Actions e data access no Next.js App Router.
-- Validação server-side de formulários.
-- Proteção básica contra abuso em formulários públicos.
-- UX de formulários com estados de sucesso, erro, loading e empty.
-- Construção de painel administrativo responsivo.
-- Preparação de projeto para deploy web.
-
-## Comandos Disponíveis
+## Comandos
 
 ```bash
 npm run dev
+npm test
 npm run lint
 npm run typecheck
 npm run build
@@ -415,26 +208,56 @@ npm run supabase:db:reset
 npm run supabase:link
 ```
 
-Não há script de testes automatizados no momento.
+Comandos finais recomendados antes de publicar:
 
-## Resumo para Currículo
+```bash
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
 
-### Português
+## Deploy
 
-- Desenvolvi uma aplicação web full-stack para abertura, acompanhamento e gerenciamento de chamados técnicos.
-- Implementei painel administrativo autenticado com filtros, status, urgência e respostas públicas ao solicitante.
-- Modelei a estrutura de dados para tickets, respostas e fluxo de atendimento usando PostgreSQL.
-- Configurei autenticação, políticas de acesso com RLS, validação server-side e estrutura de deploy para ambiente web.
-- Criei uma interface responsiva em Next.js, TypeScript e Tailwind CSS com estados de loading, erro, vazio e sucesso.
+O alvo documentado e Vercel com Supabase hospedado.
 
-### English
+Checklist de producao:
 
-- Built a full-stack web application for creating, tracking, and managing technical support tickets.
-- Implemented an authenticated admin dashboard with filters, status management, urgency handling, and operator responses.
-- Designed the data model for tickets, responses, and support workflows using PostgreSQL.
-- Configured authentication, RLS access policies, server-side validation, and deployment-ready project structure.
-- Created a responsive interface with Next.js, TypeScript, and Tailwind CSS, including loading, error, empty, and success states.
+1. Configurar `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` e `SITE_URL` no provedor.
+2. Aplicar migrations no Supabase remoto.
+3. Desativar public signups no Supabase Auth.
+4. Criar operadores manualmente em Authentication > Users.
+5. Nao aplicar o seed local em producao.
+6. Rodar smoke test das rotas publicas e privadas.
 
-## Texto Curto para Portfólio
+Guia completo: [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md).
 
-ChamadaFácil é um sistema web de chamados para pequenos negócios, com abertura pública de solicitações, consulta por código e e-mail, painel administrativo autenticado, filtros, status, urgência e respostas do operador. O projeto demonstra desenvolvimento full-stack com Next.js, TypeScript, Tailwind CSS, Supabase Auth, PostgreSQL e RLS em um escopo de MVP realista e apresentável.
+## Limitacoes Conscientes
+
+- Nao ha RBAC; todo usuario autenticado no Supabase e operador/admin.
+- Nao ha multiempresa/multi-tenant.
+- Nao ha contas publicas para solicitantes.
+- Nao ha anexos/upload.
+- Nao ha e-mail transacional.
+- Nao ha SLA, vencimentos ou indicadores de atraso.
+- Nao ha base de conhecimento.
+- Nao ha notas internas para operadores.
+- Nao ha auditoria avancada de mudancas.
+
+Esses pontos sao futuros possiveis, nao funcionalidades prontas.
+
+## Roadmap Possivel
+
+- RBAC com papeis de admin, operador e visualizador.
+- Isolamento por empresa/tenant.
+- Notificacoes por e-mail.
+- Anexos.
+- SLA e indicadores de atraso.
+- Exportacao CSV.
+- Auditoria mais detalhada.
+- Base de conhecimento.
+- Notas internas.
+
+## Resumo Para Portfolio
+
+ChamadaFacil e um help desk full-stack para pequenos negocios, com abertura publica de chamados, consulta por codigo/e-mail, painel admin autenticado, fila operacional com busca/filtros/ordenacao, respostas publicas e documentacao pronta para avaliacao tecnica. O projeto demonstra Next.js, TypeScript, Supabase Auth, PostgreSQL/RLS, Server Actions, validacao server-side, rate limit basico e testes em um escopo MVP honesto.

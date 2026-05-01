@@ -29,6 +29,9 @@ export const metadata: Metadata = {
 
 type AdminPageProps = {
   searchParams: Promise<{
+    query?: string | string[];
+    response?: string | string[];
+    sort?: string | string[];
     status?: string | string[];
     urgency?: string | string[];
   }>;
@@ -50,7 +53,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
         <Container>
           <SectionHeader
             title="Chamados"
-            description="Acompanhe a fila de suporte com os chamados mais recentes no topo."
+            description="Acompanhe a fila de suporte por prioridade, resposta, busca e atividade recente."
             className="animate-fade-in"
           />
 
@@ -58,15 +61,12 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
             <AdminStatsRow />
           </Suspense>
 
-          <div className="mt-8 animate-slide-up animate-delay-150">
+          <div className="mt-8">
             <AdminTicketFilters filters={filters} />
           </div>
 
-          <div className="mt-6 animate-slide-up animate-delay-300">
-            <Suspense
-              fallback={<AdminDashboardSkeleton />}
-              key={`${filters.status}-${filters.urgency}`}
-            >
+          <div className="mt-6">
+            <Suspense fallback={<AdminDashboardSkeleton />}>
               <AdminTicketsPanel filters={filters} />
             </Suspense>
           </div>

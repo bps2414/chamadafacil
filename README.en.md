@@ -1,234 +1,117 @@
-# ChamadaFácil
+# ChamadaFacil
 
-<p align="center">
-  <strong>A web-based help desk system for small businesses in Brazil.</strong>
-</p>
+A web-based support ticket system for small businesses in Brazil, with public ticket creation, ticket lookup by code/e-mail, and a protected admin panel for operating the support queue.
 
-<p align="center">
-  A full-stack application for creating, tracking, and managing support tickets through a simple and organized workflow.
-</p>
+> Status: functional portfolio MVP. This project demonstrates a realistic single-company help desk workflow without claiming multi-tenancy, full RBAC, attachments, automated e-mail, or enterprise SaaS scope.
 
-<p align="center">
-  <a href="#screenshots">Screenshots</a>
-  ·
-  <a href="./docs/CASE_STUDY.en.md">Case study</a>
-  ·
-  <a href="./docs/SECURITY.md">Security</a>
-  ·
-  <a href="./docs/DEPLOYMENT.md">Deployment</a>
-  ·
-  <a href="./README.md">Português</a>
-</p>
+## Quick Review Path
 
-> Status: functional portfolio MVP. This repository is presented as a serious portfolio project with a realistic help desk scope and no claims beyond the implemented features.
+1. Open the demo: [chamadafacil.vercel.app](https://chamadafacil.vercel.app/).
+2. Review the public flow at `/tickets/new`: create a ticket and copy the generated code.
+3. Track the ticket at `/tickets/lookup` using code and e-mail.
+4. Review the admin panel in the README/case study and, locally, sign in at `/admin/login` with the development seed account.
+5. Check the technical highlights: Server Actions, Supabase Auth, PostgreSQL/RLS, server-side validation, basic rate limiting, and unit tests.
 
-## Links
+Useful links:
 
 | Resource | Link |
 | --- | --- |
 | Demo | [chamadafacil.vercel.app](https://chamadafacil.vercel.app/) |
 | Repository | [github.com/bps2414/chamadafacil](https://github.com/bps2414/chamadafacil) |
 | Case study | [docs/CASE_STUDY.en.md](./docs/CASE_STUDY.en.md) |
-| Portuguese README | [README.md](./README.md) |
-| Deployment guide | [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md) |
+| Security notes | [docs/SECURITY.md](./docs/SECURITY.md) |
+| Deployment | [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md) |
 | Portfolio copy | [docs/PORTFOLIO_COPY.md](./docs/PORTFOLIO_COPY.md) |
-| Resume bullets | [docs/RESUME_BULLETS.md](./docs/RESUME_BULLETS.md) |
-| Final checklist | [docs/FINAL_PORTFOLIO_CHECKLIST.md](./docs/FINAL_PORTFOLIO_CHECKLIST.md) |
+| Portuguese README | [README.md](./README.md) |
 
-## Overview
+## What This Project Is
 
-ChamadaFácil is a help desk web application designed for small businesses that need a clearer way to receive, track, and respond to support requests.
+ChamadaFacil addresses a common small-business problem: support requests scattered across WhatsApp, e-mail, phone calls, and spreadsheets. The product keeps the essential workflow organized:
 
-The product model is single-company/single-tenant: one business uses the system internally, while public requesters can create tickets and check their status without creating an account.
+- A requester creates a ticket without an account.
+- The system generates a unique ticket code.
+- The requester tracks progress with code and e-mail.
+- An authenticated operator manages queue, status, urgency, and responses.
 
-The project has two main user groups:
-
-- Public requesters, who create tickets and track them with a ticket code plus e-mail.
-- Admins/operators, who sign in and manage the support queue, ticket status, urgency, and public responses.
+The current scope is single-company/single-tenant. This keeps the MVP small, reviewable, and honest for portfolio evaluation.
 
 ## Screenshots
 
-Final attached screenshots prepared for the project preview, using fictional data and no real credentials.
+Screenshots use fictional data and must not expose environment variables, tokens, cookies, or real credentials.
 
 | Screen | Preview |
 | --- | --- |
-| Landing page | ![ChamadaFácil landing page](./public/screenshots/landing-desktop.png) |
+| Landing page | ![ChamadaFacil landing page](./public/screenshots/landing-desktop.png) |
 | Ticket creation | ![Ticket creation form](./public/screenshots/ticket-new-form.png) |
 | Ticket lookup | ![Ticket lookup screen](./public/screenshots/ticket-lookup-form.png) |
 | Admin login | ![Admin login](./public/screenshots/admin-login.png) |
 | Admin dashboard | ![Admin dashboard](./public/screenshots/admin-dashboard.png) |
 | Admin ticket detail | ![Admin ticket detail](./public/screenshots/admin-ticket-detail.png) |
 
-## Core Features
+Full checklist: [docs/SCREENSHOTS_CHECKLIST.md](./docs/SCREENSHOTS_CHECKLIST.md).
 
-| Area | Feature | Status |
-| --- | --- | --- |
-| Public | Brazilian Portuguese landing page | Implemented |
-| Public | Public ticket creation without requester accounts | Implemented |
-| Public | Automatic ticket code generation | Implemented |
-| Public | Ticket lookup by code and e-mail | Implemented |
-| Public | Status, urgency, request details, and response timeline | Implemented |
-| Admin | Admin login with Supabase Auth | Implemented |
-| Admin | Protected dashboard | Implemented |
-| Admin | Responsive ticket list | Implemented |
-| Admin | Filters by status and urgency | Implemented |
-| Admin | Ticket detail with requester data | Implemented |
-| Admin | Status and urgency updates | Implemented |
-| Admin | Public operator responses | Implemented |
-| UX | Loading, empty, error, and success states | Implemented |
-| UX | Responsive/mobile interface | Implemented |
-| Security | RLS, server-side validation, and basic rate limiting | Implemented |
-| Product | Knowledge base | Not implemented; future improvement |
+## Implemented Features
 
-## Public User Flow
+### Public Flow
 
-1. Open the landing page.
-2. Create a ticket at `/tickets/new`.
-3. Submit name, e-mail, optional phone, subject, and description.
-4. Receive a ticket code such as `CF-2026-00001`.
-5. Track the ticket at `/tickets/lookup`.
-6. Enter the ticket code and e-mail.
-7. View status, urgency, original request, and operator responses.
+- Brazilian Portuguese landing page.
+- Public ticket creation without requester accounts.
+- Server-side validation for name, e-mail, phone, subject, and description.
+- Automatic ticket number generation in the `CF-YYYY-00000` format.
+- Success state with highlighted ticket code, copy button, and lookup CTA.
+- Ticket lookup by ticket number and e-mail.
+- Result screen with status, urgency, original description, and public responses.
+- Neutral not-found copy when the code/e-mail combination does not match a ticket.
 
-## Admin Flow
+### Admin Panel
 
-1. Open `/admin/login`.
-2. Sign in with a manually created Supabase Auth account.
-3. View the dashboard at `/admin`.
-4. Filter tickets by status and urgency.
-5. Open a ticket detail page.
-6. Update status and urgency.
-7. Publish a response visible to the requester.
-8. Mark the ticket as resolved when the support request is complete.
+- Admin login with Supabase Auth.
+- `/admin` routes protected by Proxy and server-side checks.
+- Dashboard with compact stats.
+- Responsive list: table on desktop and cards on mobile.
+- Filters by status, urgency, and response state.
+- Search by ticket number, subject, and requester.
+- Sorting by update date, creation date, and urgency.
+- Highlights for urgent and unanswered tickets.
+- Ticket detail with requester data and timeline.
+- Status, urgency, and public response management.
+
+### Quality and Security
+
+- PostgreSQL migrations and constraints.
+- Row Level Security on app tables.
+- Server Actions for creation, lookup, and admin mutations.
+- Server-side validation for public and admin forms.
+- Same-origin guard for public workflows.
+- Basic IP/e-mail rate limiting with hashed subjects.
+- `SUPABASE_SERVICE_ROLE_KEY` used only in server-side code.
+- Security headers in `next.config.ts`.
+- Vitest unit tests for validation, filters, and pure workflow rules.
 
 ## Tech Stack
 
 | Layer | Technology |
 | --- | --- |
-| Web framework | Next.js App Router |
-| Language | TypeScript |
-| UI | React and Tailwind CSS |
-| Authentication | Supabase Auth |
+| Framework | Next.js App Router |
+| UI | React, TypeScript, and Tailwind CSS |
+| Auth | Supabase Auth |
 | Database | Supabase PostgreSQL |
-| Data security | Supabase Row Level Security |
-| Data access | Server Components, Server Actions, and Supabase helpers |
-| Web deployment | Vercel as the primary target |
+| Data security | Supabase RLS |
+| Mutations | Server Actions |
+| Tests | Vitest |
+| Deployment target | Vercel |
 
-Main versions confirmed in `package.json`:
+Main versions are listed in [`package.json`](./package.json).
 
-- Next.js `^16.2.4`
-- React `^19.2.5`
-- TypeScript `^6.0.3`
-- Tailwind CSS `^4.2.4`
-- `@supabase/supabase-js` `^2.105.1`
-- `@supabase/ssr` `^0.10.2`
+## Technical Decisions
 
-## Architecture Summary
-
-```text
-src/
-  app/
-    (public)/
-      page.tsx
-      tickets/new/page.tsx
-      tickets/lookup/page.tsx
-    (admin)/
-      admin/login/page.tsx
-      admin/page.tsx
-      admin/tickets/[id]/page.tsx
-  components/
-    admin/
-    tickets/
-    ui/
-  lib/
-    data/
-    security/
-    supabase/
-    validation/
-supabase/
-  migrations/
-  seed.sql
-docs/
-```
-
-Public routes:
-
-- `/`
-- `/tickets/new`
-- `/tickets/lookup`
-- `/abrir-chamado`, redirects to `/tickets/new`
-- `/consultar-chamado`, redirects to `/tickets/lookup`
-
-Private routes:
-
-- `/admin/login`
-- `/admin`
-- `/admin/tickets/[id]`
-- `/admin/tickets`, redirects to `/admin`
-
-Layer responsibilities:
-
-- App Router pages render public and admin screens.
-- Server Actions handle ticket creation, lookup, login, ticket updates, and responses.
-- `src/lib/validation` keeps form validation rules.
-- `src/lib/data` keeps data access and workflow rules.
-- `src/lib/security` keeps same-origin checks and public form rate limiting.
-- Supabase Auth manages admin sessions.
-- PostgreSQL stores tickets, responses, and rate-limit events.
-- RLS protects direct database access.
-
-## Data Model
-
-| Table | Description |
-| --- | --- |
-| `tickets` | Public support requests with requester data, subject, description, status, urgency, and timestamps. |
-| `ticket_responses` | Public admin/operator responses shown in the ticket lookup flow. |
-| `public_rate_limits` | Abuse-control events for public forms, storing hashed subjects. |
-| `auth.users` | Supabase Auth users treated as admins/operators in the MVP. |
-
-Ticket statuses:
-
-- `open`
-- `in_progress`
-- `resolved`
-
-Current priority model:
-
-- `is_urgent = false`: normal.
-- `is_urgent = true`: urgent.
-
-There is no knowledge-base table in the current MVP.
-
-## Security
-
-The security model is intentionally scoped for a single-company MVP.
-
-Implemented measures:
-
-- Admin authentication with Supabase Auth.
-- `/admin` routes protected by Next.js Proxy and server-side checks.
-- Admin Server Actions re-check the authenticated Supabase user.
-- RLS enabled on `tickets`, `ticket_responses`, and `public_rate_limits`.
-- Public ticket creation and lookup mediated by Server Actions.
-- Server-side form validation.
-- Same-origin guard for public actions.
-- Basic rate limiting by IP and e-mail, storing hashed subjects.
-- `SUPABASE_SERVICE_ROLE_KEY` used only on the server.
-- Security headers configured in `next.config.ts`.
-
-Known MVP limitation:
-
-Any authenticated Supabase user is treated as an admin/operator. This is acceptable for the current single-company scope only if public signups are disabled in production and users are managed manually.
-
-Future security improvements:
-
-- RBAC with roles such as `admin`, `operator`, and `viewer`.
-- Action-level permissions.
-- Advanced audit logs.
-- Edge/WAF rate limiting.
-- Tenant isolation if the product evolves into a multi-company system.
-
-See [docs/SECURITY.md](./docs/SECURITY.md) for details.
+- App Router separates public and admin areas.
+- Server Actions centralize validation, authorization, and mutations.
+- RLS prevents improper direct table access.
+- Public lookup requires both ticket code and e-mail to reduce ticket exposure.
+- Admin is modeled as an internal tool: users are created manually in Supabase.
+- Admin filters live in the URL so the queue state can be refreshed or shared.
+- Pure rules and validation helpers are isolated for tests that do not require the database.
 
 ## Local Development
 
@@ -257,17 +140,14 @@ On Windows PowerShell:
 Copy-Item .env.example .env.local
 ```
 
-Fill the required environment variables.
+Fill the variables in `.env.local`.
 
-To run Supabase locally:
+Start local Supabase and apply migrations/seed:
 
 ```bash
 npm run supabase:start
-npm run supabase:status
 npm run supabase:db:reset
 ```
-
-`supabase db reset` applies migrations and runs `supabase/seed.sql`.
 
 Run the app:
 
@@ -275,11 +155,7 @@ Run the app:
 npm run dev
 ```
 
-Open:
-
-```text
-http://localhost:3000
-```
+Open `http://localhost:3000`.
 
 Local seed admin:
 
@@ -290,14 +166,14 @@ Password: admin123
 
 This account is for local development only. Do not publish it as a production demo login.
 
-Local lookup sample after seed:
+Local ticket lookup sample after seed:
 
 ```text
 Ticket: CF-2026-00001
 E-mail: juliana.martins@padariabona.com.br
 ```
 
-The names, e-mails, and companies in the seed data are fictional demo records. They do not represent organizations served by the project.
+Seed data is fictional.
 
 ## Environment Variables
 
@@ -312,99 +188,16 @@ SITE_URL=https://chamadafacil.vercel.app
 | --- | --- | --- |
 | `NEXT_PUBLIC_SUPABASE_URL` | Public/browser-safe | Supabase project URL. |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Public/browser-safe | Public anon key used with RLS. |
-| `SUPABASE_SERVICE_ROLE_KEY` | Server-only | Controlled public workflows and rate limiting. |
-| `SITE_URL` | Public/canonical | Final domain used by canonical, Open Graph, robots, and sitemap. |
+| `SUPABASE_SERVICE_ROLE_KEY` | Server only | Controlled public workflows and rate limiting. |
+| `SITE_URL` | Public/canonical | Canonical, Open Graph, robots, and sitemap. |
 
-Notes:
+Never prefix the service role key with `NEXT_PUBLIC_`, and never place real secrets in README files, screenshots, logs, or public issues.
 
-- Variables prefixed with `NEXT_PUBLIC_` can be bundled into browser code.
-- Never prefix the service role key with `NEXT_PUBLIC_`.
-- Never place real secrets in README files, screenshots, logs, or public issues.
-- Configure production variables in the hosting provider before building.
-
-## Supabase Setup
-
-1. Create a Supabase project.
-2. Copy the Project URL and anon public key into `.env.local`.
-3. Copy the service role key only into server-side environments.
-4. Apply the migrations locally or to the remote project.
-5. Disable public signups in Supabase Auth for production.
-6. Manually create or invite admins/operators in Authentication > Users.
-7. Confirm that only intended operators exist in `auth.users`.
-
-Local flow:
-
-```bash
-npm run supabase:start
-npm run supabase:db:reset
-```
-
-Remote flow:
-
-```bash
-npm run supabase:link
-npx supabase db push
-```
-
-Do not push local seed credentials or development demo data to production.
-
-## Deployment
-
-The documented primary deployment target is Vercel, which is the most direct path for this Next.js App Router MVP.
-
-Checklist:
-
-1. Publish the repository on GitHub.
-2. Import the project into Vercel.
-3. Confirm the framework preset as Next.js.
-4. Configure `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, and `SUPABASE_SERVICE_ROLE_KEY`.
-5. Apply migrations to the remote Supabase project.
-6. Disable public signups in Supabase Auth.
-7. Manually create the admin/operator account.
-8. Smoke test public and private routes.
-
-Final verification commands:
-
-```bash
-npm run lint
-npm run typecheck
-npm run build
-```
-
-See [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md) for the full guide.
-
-## Roadmap
-
-Planned improvements, not implemented in the current MVP:
-
-- RBAC with role-based permissions.
-- Multi-company/multi-tenant support.
-- E-mail notifications.
-- File attachments.
-- Advanced history/audit logs.
-- SLA labels and overdue indicators.
-- Better operational metrics.
-- CSV export.
-- Knowledge base.
-- Internal-only operator notes.
-
-## What This Project Demonstrates
-
-- Data modeling for a support workflow.
-- PostgreSQL migrations.
-- Authentication with Supabase Auth.
-- Data access protection with RLS.
-- Server Actions and data access in the Next.js App Router.
-- Server-side form validation.
-- Basic abuse protection for public forms.
-- Form UX with success, error, loading, and empty states.
-- Responsive admin interface.
-- Deployment-ready project documentation.
-
-## Available Commands
+## Commands
 
 ```bash
 npm run dev
+npm test
 npm run lint
 npm run typecheck
 npm run build
@@ -415,16 +208,56 @@ npm run supabase:db:reset
 npm run supabase:link
 ```
 
-There is currently no automated test script.
+Recommended final checks before publishing:
 
-## Resume Bullets
+```bash
+npm test
+npm run lint
+npm run typecheck
+npm run build
+```
 
-- Built a full-stack web application for creating, tracking, and managing technical support tickets.
-- Implemented an authenticated admin dashboard with filters, status management, urgency handling, and operator responses.
-- Designed the data model for tickets, responses, and support workflows using PostgreSQL.
-- Configured authentication, RLS access policies, server-side validation, and deployment-ready project structure.
-- Created a responsive interface with Next.js, TypeScript, and Tailwind CSS, including loading, error, empty, and success states.
+## Deployment
 
-## Portfolio Card
+The documented target is Vercel with hosted Supabase.
 
-ChamadaFácil is a help desk web application for small businesses, featuring public ticket creation, ticket lookup by code and e-mail, an authenticated admin dashboard, filters, status and urgency management, and operator responses. The project demonstrates full-stack development with Next.js, TypeScript, Tailwind CSS, Supabase Auth, PostgreSQL, and RLS within a realistic MVP scope.
+Production checklist:
+
+1. Configure `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`, and `SITE_URL` in the provider.
+2. Apply migrations to the remote Supabase project.
+3. Disable public signups in Supabase Auth.
+4. Manually create operators in Authentication > Users.
+5. Do not apply the local seed in production.
+6. Smoke test public and private routes.
+
+Full guide: [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md).
+
+## Conscious Limitations
+
+- No RBAC; every authenticated Supabase user is an operator/admin.
+- No multi-company or multi-tenant support.
+- No public requester accounts.
+- No attachments/uploads.
+- No transactional e-mail.
+- No SLA, due dates, or overdue indicators.
+- No knowledge base.
+- No internal operator notes.
+- No advanced audit trail.
+
+These items are possible future work, not completed features.
+
+## Possible Roadmap
+
+- RBAC with admin, operator, and viewer roles.
+- Company/tenant isolation.
+- E-mail notifications.
+- Attachments.
+- SLA and overdue indicators.
+- CSV export.
+- More detailed audit trail.
+- Knowledge base.
+- Internal notes.
+
+## Portfolio Summary
+
+ChamadaFacil is a full-stack help desk for small businesses, with public ticket creation, code/e-mail lookup, an authenticated admin panel, an operational queue with search/filters/sorting, public responses, and documentation ready for technical review. It demonstrates Next.js, TypeScript, Supabase Auth, PostgreSQL/RLS, Server Actions, server-side validation, basic rate limiting, and tests within an honest MVP scope.

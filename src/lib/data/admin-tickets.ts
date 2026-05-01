@@ -4,6 +4,7 @@ import type { TicketStatus } from "@/lib/data/tickets";
 import {
   getTicketResolvedAt,
   type AdminTicketFilters,
+  type AdminTicketSortFilter,
   type AdminTicketStatusFilter,
   type AdminTicketUrgencyFilter,
 } from "@/lib/data/admin-ticket-workflow";
@@ -19,13 +20,18 @@ import {
 } from "@/lib/validation/admin-tickets";
 import type { FieldErrors } from "@/lib/validation/tickets";
 
-export { parseAdminTicketFilters } from "@/lib/data/admin-ticket-workflow";
+export {
+  getTicketResolvedAt,
+  parseAdminTicketFilters,
+} from "@/lib/data/admin-ticket-workflow";
 export type { AdminTicketFilters, AdminTicketStatusFilter, AdminTicketUrgencyFilter };
 
 export type AdminTicket = {
   created_at: string;
+  has_response: boolean;
   id: string;
   is_urgent: boolean;
+  last_activity_at: string;
   requester_name: string;
   status: TicketStatus;
   subject: string;
@@ -79,11 +85,17 @@ export type AdminTicketResponseState = {
 };
 
 type AdminTicketDetailRow = Omit<AdminTicketDetail, "responses">;
+type AdminTicketRow = Omit<AdminTicket, "has_response" | "last_activity_at">;
 
 type AdminTicketResponseRow = {
   body: string;
   created_at: string;
   id: string;
+};
+
+type AdminTicketListResponseRow = {
+  created_at: string;
+  ticket_id: string;
 };
 
 type AdminTicketStatusRow = {
@@ -128,9 +140,7 @@ export async function listAdminTickets(
       .select(
         "id, ticket_number, requester_name, subject, status, is_urgent, created_at, updated_at",
       )
-      .order("updated_at", { ascending: false })
-      .order("created_at", { ascending: false })
-      .limit(50);
+      .limit(100);
 
     if (filters.status !== "all") {
       query = query.eq("status", filters.status);
@@ -144,7 +154,23 @@ export async function listAdminTickets(
       query = query.eq("is_urgent", false);
     }
 
-    const { data, error } = await query.returns<AdminTicket[]>();
+    const searchQuery = normalizeAdminTicketSearch(filters.query);
+
+    if (searchQuery) {
+      const escapedQuery = escapePostgrestLikePattern(searchQuery);
+      const likePattern = `*${escapedQuery}*`;
+      query = query.or(
+        [
+          `ticket_number.ilike.${likePattern}`,
+          `subject.ilike.${likePattern}`,
+          `requester_name.ilike.${likePattern}`,
+        ].join(","),
+      );
+    }
+
+    query = applyAdminTicketSort(query, filters.sort);
+
+    const { data, error } = await query.returns<AdminTicketRow[]>();
 
     if (error) {
       return {
@@ -154,9 +180,78 @@ export async function listAdminTickets(
       };
     }
 
+    const tickets = data ?? [];
+
+    if (tickets.length === 0) {
+      return {
+        status: "success",
+        tickets: [],
+      };
+    }
+
+    const ticketIds = tickets.map((ticket) => ticket.id);
+    const { data: responses, error: responsesError } = await supabase
+      .from("ticket_responses")
+      .select("ticket_id, created_at")
+      .in("ticket_id", ticketIds)
+      .returns<AdminTicketListResponseRow[]>();
+
+    if (responsesError) {
+      return {
+        message:
+          "Os chamados foram encontrados, mas não foi possível carregar o estado das respostas.",
+        status: "error",
+      };
+    }
+
+    const responseMetaByTicketId = new Map<
+      string,
+      { has_response: boolean; last_response_at: string | null }
+    >();
+
+    for (const response of responses ?? []) {
+      const current = responseMetaByTicketId.get(response.ticket_id);
+
+      if (!current || response.created_at > (current.last_response_at ?? "")) {
+        responseMetaByTicketId.set(response.ticket_id, {
+          has_response: true,
+          last_response_at: response.created_at,
+        });
+      }
+    }
+
+    const ticketsWithResponseMeta = tickets
+      .map((ticket) => {
+        const responseMeta = responseMetaByTicketId.get(ticket.id);
+        const lastResponseAt = responseMeta?.last_response_at ?? null;
+        const lastActivityAt =
+          lastResponseAt && lastResponseAt > ticket.updated_at
+            ? lastResponseAt
+            : ticket.updated_at;
+
+        return {
+          ...ticket,
+          has_response: responseMeta?.has_response ?? false,
+          last_activity_at: lastActivityAt,
+        };
+      })
+      .filter((ticket) => {
+        if (filters.response === "answered") {
+          return ticket.has_response;
+        }
+
+        if (filters.response === "unanswered") {
+          return !ticket.has_response;
+        }
+
+        return true;
+      })
+      .sort((a, b) => sortAdminTickets(a, b, filters.sort))
+      .slice(0, 50);
+
     return {
       status: "success",
-      tickets: data ?? [],
+      tickets: ticketsWithResponseMeta,
     };
   } catch {
     return {
@@ -435,4 +530,67 @@ export async function createAdminTicketResponseAction(
 function revalidateAdminTicketPaths(ticketId: string) {
   revalidatePath("/admin");
   revalidatePath(`/admin/tickets/${ticketId}`);
+}
+
+function applyAdminTicketSort<
+  QueryBuilder extends {
+    order: (
+      column: string,
+      options?: { ascending?: boolean; referencedTable?: string },
+    ) => QueryBuilder;
+  },
+>(
+  query: QueryBuilder,
+  sort: AdminTicketSortFilter,
+) {
+  switch (sort) {
+    case "created_asc":
+      return query.order("created_at", { ascending: true });
+    case "created_desc":
+      return query.order("created_at", { ascending: false });
+    case "urgent_first":
+      return query
+        .order("is_urgent", { ascending: false })
+        .order("updated_at", { ascending: false })
+        .order("created_at", { ascending: false });
+    case "updated_desc":
+    default:
+      return query
+        .order("updated_at", { ascending: false })
+        .order("created_at", { ascending: false });
+  }
+}
+
+function sortAdminTickets(
+  first: AdminTicket,
+  second: AdminTicket,
+  sort: AdminTicketSortFilter,
+) {
+  switch (sort) {
+    case "created_asc":
+      return compareDates(first.created_at, second.created_at);
+    case "created_desc":
+      return compareDates(second.created_at, first.created_at);
+    case "urgent_first":
+      if (first.is_urgent !== second.is_urgent) {
+        return first.is_urgent ? -1 : 1;
+      }
+
+      return compareDates(second.last_activity_at, first.last_activity_at);
+    case "updated_desc":
+    default:
+      return compareDates(second.last_activity_at, first.last_activity_at);
+  }
+}
+
+function compareDates(first: string, second: string) {
+  return new Date(first).getTime() - new Date(second).getTime();
+}
+
+function escapePostgrestLikePattern(value: string) {
+  return value.replaceAll("\\", "\\\\").replaceAll("*", "\\*");
+}
+
+function normalizeAdminTicketSearch(value: string) {
+  return value.replace(/[(),]/g, " ").replace(/\s+/g, " ").trim();
 }

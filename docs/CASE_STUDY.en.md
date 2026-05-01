@@ -1,91 +1,89 @@
-# Case Study: ChamadaFácil
+# Case Study: ChamadaFacil
 
 ## 1. Overview
 
-ChamadaFácil is a web-based help desk system for small businesses in Brazil. It allows public users to create support tickets, track their status using a ticket code and e-mail, and gives authenticated operators a protected admin interface to manage the support queue.
+ChamadaFacil is a web-based support ticket system for small businesses in Brazil. It supports public ticket creation without accounts, ticket lookup by code/e-mail, and a protected admin panel for operating the support queue.
 
-The project was built as a full-stack portfolio piece, with a realistic MVP scope, clear documentation, proportional security decisions, and a professional user experience.
+It was built as a full-stack portfolio project: small enough to review quickly, but grounded in real product, data, basic security, tests, and documentation decisions.
+
+Links:
+
+- Demo: [chamadafacil.vercel.app](https://chamadafacil.vercel.app)
+- GitHub: [github.com/bps2414/chamadafacil](https://github.com/bps2414/chamadafacil)
 
 ## 2. Problem
 
-Small businesses often receive support requests through scattered channels such as WhatsApp, e-mail, phone calls, informal messages, or spreadsheets. This makes it easy to lose context, miss requests, duplicate answers, and leave requesters without clear status updates.
+Small businesses often receive support requests through scattered channels: WhatsApp, e-mail, phone calls, informal messages, and spreadsheets. This makes prioritization, follow-up, response history, and requester clarity harder.
 
-The core problem was to create a simple way to register, track, and respond to support tickets without turning the MVP into an overly complex platform.
+The challenge was to create a simple help desk workflow without turning the MVP into a large SaaS platform or a generic CRUD.
 
-## 3. Target Audience
+## 3. Solution
 
-- Small businesses that need to organize internal or external support requests.
-- Requesters who want to track a ticket without creating an account.
-- Operators or admins who need to view, filter, and respond to tickets.
-- Recruiters and technical reviewers looking for evidence of full-stack fundamentals.
-
-## 4. Solution
-
-ChamadaFácil provides a direct workflow:
+The implemented workflow covers the essentials:
 
 1. A requester creates a public ticket.
 2. The system generates a unique ticket code.
-3. The requester tracks the ticket with code and e-mail.
-4. The operator accesses a protected admin panel.
-5. The operator filters, updates status, marks urgency, and publishes responses.
+3. The requester tracks progress with code and e-mail.
+4. An operator signs into a protected panel.
+5. The operator searches, filters, sorts, updates status/urgency, and publishes responses.
 
-The model is single-company/single-tenant. The system is designed as an internal tool for one company, not as a multi-company SaaS product in the MVP.
+The model is single-company/single-tenant. One company uses the tool internally; multi-company support and RBAC are outside the current MVP.
 
-## 5. My Role
+## 4. My Role
 
-I worked end-to-end on the MVP definition and implementation:
+- Defined functional scope and conscious limitations.
+- Modeled tickets, responses, and rate-limit events.
+- Implemented public and admin routes.
+- Configured Supabase Auth, RLS, and migrations.
+- Created server-side validation and testable pure rules.
+- Prepared setup, deployment, security, and portfolio documentation.
 
-- Defined the functional scope and conscious limitations.
-- Modeled the database for tickets, responses, and rate limiting.
-- Implemented the public and admin interfaces.
-- Configured authentication with Supabase Auth.
-- Applied RLS and database access rules.
-- Created server-side validation for forms.
-- Prepared setup, security, deployment, and portfolio documentation.
+## 5. Implemented Features
 
-## 6. Core Features
-
-Implemented:
+Public:
 
 - Brazilian Portuguese landing page.
-- Public ticket creation without requester accounts.
-- Automatic ticket number generation.
-- Ticket lookup by code and e-mail.
-- Admin login with Supabase Auth.
-- Protected admin dashboard.
-- Responsive ticket list.
-- Filters by status and urgency.
-- Ticket detail screen.
-- Status updates.
-- Urgency toggle.
-- Public operator responses.
-- Loading, error, empty, and success states.
-- Local seed data for review.
+- Public ticket creation without accounts.
+- Automatically generated and copyable ticket code.
+- Lookup CTA after ticket creation.
+- Lookup by code/e-mail with result screen, timeline, and neutral not-found copy.
 
-Not implemented in the MVP:
+Admin:
 
-- Knowledge base.
-- File attachments.
-- E-mail notifications.
-- Public requester accounts.
-- Multi-company support.
-- SLA tracking.
-- CSV export.
+- Supabase Auth login.
+- Protected dashboard.
+- Compact stats.
+- Search by number, subject, and requester.
+- Filters by status, urgency, and response state.
+- Sorting by update date, creation date, and urgency.
+- Highlights for urgent and unanswered tickets.
+- Responsive list using table/cards.
+- Ticket detail with requester data, history, status, urgency, and public response form.
 
-## 7. Technical Decisions
+Technical:
+
+- PostgreSQL migrations.
+- RLS on core tables.
+- Server Actions for public and admin workflows.
+- Server-side validation.
+- Same-origin guard.
+- Basic rate limiting with hashes.
+- Vitest unit tests.
+
+## 6. Technical Decisions
 
 | Decision | Reason |
 | --- | --- |
-| Next.js App Router | Organizes public and private routes with Server Components and Server Actions. |
-| TypeScript | Reduces errors in data contracts, form states, and models. |
-| Tailwind CSS | Enables a responsive interface with speed and visual consistency. |
-| Supabase Auth | Avoids building custom authentication for the admin panel. |
-| Supabase PostgreSQL | Provides a real relational database with migrations and constraints. |
-| RLS | Keeps data access rules close to the database. |
-| Server Actions | Processes forms on the server with validation and access control. |
-| Single-company MVP | Keeps the scope realistic and avoids multi-tenant complexity before it is needed. |
+| Next.js App Router | Separates public/admin routes and supports Server Components/Actions. |
+| Supabase Auth | Avoids custom authentication for the admin panel. |
+| PostgreSQL/RLS | Provides a real relational database and data-level protection. |
+| Server Actions | Processes forms on the server with validation and authorization. |
+| Code + e-mail lookup | Prevents public listing and reduces ticket exposure. |
+| URL-based filters | Makes the admin queue refreshable and shareable. |
+| Tests for pure rules | Validates behavior without requiring local Supabase. |
+| Single-company MVP | Keeps the scope honest and demonstrable. |
 
-## 8. Architecture
+## 7. Architecture
 
 ```text
 src/
@@ -104,31 +102,34 @@ src/
     ui/
   lib/
     data/
+    formatters/
     security/
     supabase/
     validation/
 supabase/
   migrations/
   seed.sql
+docs/
 ```
 
-Applied separation:
+Responsibilities:
 
-- `app`: routes and page composition.
-- `components`: public UI, admin UI, and shared primitives.
+- `app`: routes, layouts, and composition.
+- `components`: public UI, admin UI, and shared components.
 - `lib/data`: queries, mutations, and workflow rules.
-- `lib/validation`: form validation rules.
+- `lib/validation`: input validation.
 - `lib/security`: same-origin guard and rate limiting.
-- `lib/supabase`: Supabase client creation.
-- `supabase/migrations`: schema and database policies.
+- `lib/formatters`: date formatting.
+- `supabase/migrations`: schema, grants, and policies.
 
-## 9. Database
+## 8. Database
 
 Main tables:
 
-- `tickets`: ticket, requester, subject, description, status, urgency, and timestamps.
-- `ticket_responses`: public responses related to a ticket.
-- `public_rate_limits`: public form rate-limit events with hashed subjects.
+- `tickets`: requester, subject, description, status, urgency, and timestamps.
+- `ticket_responses`: public operator responses.
+- `public_rate_limits`: abuse-control events with `subject_hash`.
+- `auth.users`: Supabase users treated as operators/admins in the MVP.
 
 Statuses:
 
@@ -136,128 +137,90 @@ Statuses:
 - `in_progress`
 - `resolved`
 
-Relationship:
+The local seed creates fictional data and a development-only admin account. It should not be used in production.
 
-- One ticket has many responses.
-- One response belongs to one ticket.
-
-The local seed creates demo tickets and a local-only admin user for development.
-
-The names, e-mails, and companies used in the seed are fictional and only support local review of the workflow. They do not represent organizations served by the project.
-
-## 10. Authentication and Security
-
-The admin panel uses Supabase Auth with e-mail and password login.
-
-The current authorization model is intentionally simple: any authenticated Supabase user is treated as an admin/operator. This is a conscious choice for a single-company MVP and depends on an important condition: public signups must be disabled in production, and users must be created manually.
+## 9. Security
 
 Implemented measures:
 
-- Admin routes protected by Next.js Proxy.
-- Server-side authenticated-user checks on admin pages.
-- Authentication checks inside admin Server Actions.
-- RLS on public tables.
-- No direct anonymous access to tickets and responses.
-- Public creation and lookup through controlled Server Actions.
-- Server-side field validation.
-- Rate limiting by IP and e-mail using hashes.
-- Service role key used only on the server.
-- Global security headers.
-
-Future improvements:
-
-- RBAC.
-- Role-based permissions.
-- Change audit trail.
-- Defensive admin event logging.
-- Edge/WAF rate limiting.
-
-## 11. UI/UX
-
-The interface was designed to be clear, direct, and appropriate for small businesses. The priority was to avoid a generic empty dashboard and build a workflow that is understandable both for requesters and support operators.
-
-UI/UX highlights:
-
-- Landing page with visible primary actions.
-- Public form split into requester information and ticket details.
-- Ticket code highlighted after creation.
-- Simple lookup by code and e-mail.
-- Admin dashboard with compact stats and filters.
-- Responsive list using cards on mobile and a table on desktop.
-- Ticket detail with requester data, timeline, and management panel.
-- Visual feedback for success, error, loading, and empty states.
-
-## 12. Responsiveness
-
-The project includes mobile and desktop adaptation:
-
-- Public navigation with a mobile menu.
-- Responsive form grids.
-- Dashboard cards on smaller screens.
-- Admin list cards on mobile.
-- Ticket detail layout with a side panel on desktop and stacked flow on mobile.
-
-## 13. Challenges
-
-Main technical challenges:
-
-- Balancing public ticket access without requester accounts and without exposing all tickets.
-- Preventing public ticket listing.
-- Keeping the admin panel simple but still meaningful.
-- Documenting MVP limitations honestly.
-- Using the service role only in controlled server-side paths.
-- Defining a viable single-company authentication model without implementing RBAC too early.
-
-## 14. Learnings
-
-The project reinforced practical experience in:
-
-- Relational data modeling.
-- PostgreSQL migrations.
-- Supabase Auth.
-- Row Level Security.
-- Server Actions in the Next.js App Router.
+- Supabase Auth for the admin panel.
+- `/admin` routes protected by Proxy.
+- Admin Server Actions re-check the authenticated user.
+- RLS on `tickets`, `ticket_responses`, and `public_rate_limits`.
+- No public ticket listing.
+- Public creation/lookup mediated by Server Actions.
 - Server-side validation.
-- Form states.
-- Basic abuse protection.
-- Public/private route organization.
-- Technical documentation for portfolio review.
+- Same-origin guard for public flows.
+- Basic IP/e-mail rate limiting with hashes.
+- Service role key used only on the server.
+- Security headers in `next.config.ts`.
 
-## 15. Conscious MVP Limitations
+Conscious limit: every authenticated Supabase user is treated as an operator/admin. In production, public signups must be disabled and operators must be created manually.
 
-- No public requester accounts.
-- No RBAC; every authenticated Supabase user is an admin/operator.
+## 10. UX
+
+The UX goal was to communicate an operational tool, not a decorative landing page:
+
+- Clear CTAs for creating and tracking tickets.
+- Direct public form.
+- Success state with copyable code and visible next step.
+- Lookup result with status, urgency, history, and follow-up guidance.
+- Admin queue with dense filters and operational signals.
+- Mobile cards and stacked controls.
+- Loading, empty, error, and success states.
+
+## 11. Tests
+
+The project uses Vitest for lower-dependency checks:
+
+- Public validations.
+- Admin validations.
+- Ticket number normalization.
+- Admin filter parser.
+- Pure `resolved_at` rule.
+- Relative date formatting.
+
+Command:
+
+```bash
+npm test
+```
+
+## 12. Conscious Limitations
+
+- No RBAC.
 - No multi-company support.
-- No file attachments.
+- No public requester accounts.
+- No attachments.
 - No e-mail notifications.
-- No SLA tracking.
+- No SLA or due dates.
 - No knowledge base.
-- No automated test script yet.
+- No internal notes.
+- No advanced audit trail.
 
-These limitations were kept intentionally to preserve a focused, demonstrable, and coherent MVP.
+These limitations keep the MVP coherent and reviewable.
 
-## 16. Future Improvements
+## 13. Future Improvements
 
-- RBAC with admin, operator, and viewer roles.
-- Multi-company support with tenant isolation.
-- E-mail notifications when tickets are created or answered.
+- RBAC with roles.
+- Multi-company tenant isolation.
+- Transactional e-mail.
 - File uploads.
-- Change history and audit logs.
-- SLA labels and overdue indicators.
-- Ticket volume and resolution-time metrics.
+- SLA and overdue indicators.
+- Detailed audit trail.
 - CSV export.
 - Knowledge base.
-- Internal-only operator notes.
-- Automated tests.
+- Internal notes.
+- Integration/e2e tests.
 
-## 17. Resume Bullets
+## 14. Interview Summary
 
-- Built a full-stack web application for creating, tracking, and managing technical support tickets.
-- Implemented an authenticated admin dashboard with filters, status management, urgency handling, and operator responses.
-- Designed the data model for tickets, responses, and support workflows using PostgreSQL.
-- Configured authentication, RLS access policies, server-side validation, and deployment-ready project structure.
-- Created a responsive interface with Next.js, TypeScript, and Tailwind CSS, including loading, error, empty, and success states.
+"I wanted to avoid a generic CRUD. I modeled a realistic support workflow: public ticket creation without accounts, lookup by code/e-mail, and a protected admin panel. I used Next.js with Server Actions, Supabase Auth, PostgreSQL with RLS, server-side validation, basic rate limiting, and unit tests. I kept the scope honest: it is a single-company MVP, not an enterprise SaaS."
 
-## 18. Portfolio Card Text
+## 15. Resume Bullets
 
-ChamadaFácil is a help desk web application for small businesses, featuring public ticket creation, ticket lookup by code and e-mail, an authenticated admin dashboard, filters, status and urgency management, and operator responses. The project demonstrates full-stack development with Next.js, TypeScript, Tailwind CSS, Supabase Auth, PostgreSQL, and RLS within a realistic MVP scope.
+- Built a full-stack help desk with public ticket creation, code/e-mail lookup, and authenticated admin panel.
+- Modeled tickets, responses, and rate-limit events in PostgreSQL with migrations and RLS.
+- Implemented Server Actions with server-side validation, admin route protection, and server-only service role usage.
+- Created an operational admin queue with search, filters, sorting, urgency/unanswered highlights, and responsive layout.
+- Added unit tests for validations, filters, and pure ticket workflow rules.

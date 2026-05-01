@@ -5,7 +5,7 @@ import type {
 } from "@/lib/data/admin-tickets";
 import { Badge } from "@/components/ui/badge";
 import { EmptyState } from "@/components/ui/empty-state";
-import { formatDateTime } from "@/lib/formatters/date";
+import { formatDateTime, formatRelativeAge } from "@/lib/formatters/date";
 import { DocumentIcon, AlertIcon, ArrowRightIcon } from "@/components/ui/icons";
 
 type AdminTicketListProps = {
@@ -14,15 +14,23 @@ type AdminTicketListProps = {
 };
 
 export function AdminTicketList({ filters, tickets }: AdminTicketListProps) {
+  const hasFilters = hasActiveFilters(filters);
+
   if (tickets.length === 0) {
     return (
       <EmptyState
-        icon={hasActiveFilters(filters) ? <AlertIcon className="h-6 w-6" /> : <DocumentIcon className="h-6 w-6" />}
-        title={hasActiveFilters(filters) ? "Nenhum chamado encontrado" : "Nenhum chamado aberto ainda"}
+        icon={
+          hasFilters ? (
+            <AlertIcon className="h-6 w-6" />
+          ) : (
+            <DocumentIcon className="h-6 w-6" />
+          )
+        }
+        title={hasFilters ? "Nenhum chamado encontrado" : "Nenhum chamado aberto ainda"}
         description={
-          hasActiveFilters(filters)
-            ? "Não há chamados para os filtros selecionados. Limpe os filtros para ver a fila completa."
-            : "Quando alguém abrir uma solicitação, ela aparecerá aqui com os chamados mais recentes primeiro."
+          hasFilters
+            ? "Não há chamados para a busca ou filtros selecionados. Limpe os filtros para ver a fila completa."
+            : "Quando alguém abrir uma solicitação, ela aparecerá aqui para acompanhamento da equipe."
         }
         className="my-8"
       />
@@ -32,10 +40,15 @@ export function AdminTicketList({ filters, tickets }: AdminTicketListProps) {
   return (
     <section
       aria-live="polite"
-      className="rounded-2xl border border-border bg-background shadow-sm overflow-hidden"
+      className="overflow-hidden rounded-2xl border border-border bg-background shadow-sm"
     >
-      <div className="border-b border-border/50 bg-surface-hover/50 px-5 py-4 text-sm font-medium text-muted-foreground flex justify-between items-center">
-        <span>Mostrando {tickets.length} chamado{tickets.length === 1 ? "" : "s"}</span>
+      <div className="flex flex-col gap-1 border-b border-border/50 bg-surface-hover/50 px-4 py-4 text-sm font-medium text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-5">
+        <span>
+          Mostrando {tickets.length} chamado{tickets.length === 1 ? "" : "s"}
+        </span>
+        {hasFilters ? (
+          <span className="text-xs">Filtros ativos preservados na URL</span>
+        ) : null}
       </div>
 
       <div className="divide-y divide-border/50 lg:hidden">
@@ -48,39 +61,49 @@ export function AdminTicketList({ filters, tickets }: AdminTicketListProps) {
         <table className="w-full border-collapse text-left text-sm">
           <thead>
             <tr className="border-b border-border/50 bg-surface-hover/30 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-              <th className="px-4 py-4 w-24">Chamado</th>
+              <th className="w-32 px-4 py-4">Chamado</th>
               <th className="px-4 py-4">Assunto</th>
-              <th className="px-4 py-4 w-32">Solicitante</th>
-              <th className="px-4 py-4 w-32">Status</th>
-              <th className="px-4 py-4 w-24">Urgência</th>
-              <th className="px-4 py-4 w-32">Atualização</th>
-              <th className="px-4 py-4 w-24 text-right">Ação</th>
+              <th className="w-40 px-4 py-4">Solicitante</th>
+              <th className="w-36 px-4 py-4">Status</th>
+              <th className="w-40 px-4 py-4">Operação</th>
+              <th className="w-48 px-4 py-4">Tempo</th>
+              <th className="w-24 px-4 py-4 text-right">Ação</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border/50">
             {tickets.map((ticket) => (
-              <tr key={ticket.id} className="align-middle transition-colors hover:bg-surface-hover/50 group">
+              <tr
+                key={ticket.id}
+                className={`group align-middle transition-colors hover:bg-surface-hover/50 ${
+                  ticket.is_urgent ? "bg-destructive/[0.03]" : ""
+                } ${!ticket.has_response ? "shadow-[inset_3px_0_0_var(--warning)]" : ""}`}
+              >
                 <td className="px-4 py-4 font-semibold text-foreground">
-                  {ticket.ticket_number}
+                  <span className="break-all">{ticket.ticket_number}</span>
                 </td>
                 <td className="px-4 py-4 font-medium text-foreground">
-                  <span className="line-clamp-2">{ticket.subject}</span>
+                  <span className="line-clamp-2 break-words">{ticket.subject}</span>
                 </td>
                 <td className="px-4 py-4 text-muted-foreground">
-                  <span className="line-clamp-2">{ticket.requester_name}</span>
+                  <span className="line-clamp-2 break-words">
+                    {ticket.requester_name}
+                  </span>
                 </td>
                 <td className="px-4 py-4">
                   <TicketStatusBadge status={ticket.status} />
                 </td>
                 <td className="px-4 py-4">
-                  <TicketUrgencyBadge isUrgent={ticket.is_urgent} />
+                  <div className="flex flex-wrap gap-2">
+                    <TicketUrgencyBadge isUrgent={ticket.is_urgent} />
+                    <TicketResponseBadge hasResponse={ticket.has_response} />
+                  </div>
                 </td>
-                <td className="px-4 py-4 text-muted-foreground text-xs">
-                  {formatDateTime(ticket.updated_at || ticket.created_at)}
+                <td className="px-4 py-4 text-xs text-muted-foreground">
+                  <TicketTimeMeta ticket={ticket} />
                 </td>
                 <td className="px-4 py-4 text-right">
                   <Link
-                    className="inline-flex items-center justify-center rounded-lg border border-transparent px-3 py-1.5 text-sm font-semibold text-primary transition-all hover:bg-primary/10 hover:border-primary/20"
+                    className="inline-flex min-h-10 items-center justify-center rounded-lg border border-transparent px-3 py-2 text-sm font-semibold text-primary transition-all hover:border-primary/20 hover:bg-primary/10"
                     href={`/admin/tickets/${ticket.id}`}
                   >
                     Abrir
@@ -123,49 +146,63 @@ export function AdminDashboardSkeleton() {
   );
 }
 
-function TicketCard({ ticket, index }: { ticket: AdminTicket, index: number }) {
-  // Use index to create a staggered animation delay (max 500ms)
+function TicketCard({ ticket, index }: { ticket: AdminTicket; index: number }) {
   const delayClass = `animate-delay-${Math.min(index * 100, 500)}`;
-  
+
   return (
-    <article className={`p-5 transition-all duration-300 hover:bg-surface-hover hover:shadow-sm animate-slide-up opacity-0 ${delayClass}`}>
-      <div className="flex items-start justify-between gap-4">
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="inline-flex items-center justify-center rounded-md bg-muted px-2 py-1 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
-              {ticket.ticket_number}
-            </span>
-          </div>
-          <h2 className="text-base font-semibold text-foreground leading-snug line-clamp-2">
-            {ticket.subject}
-          </h2>
-          <p className="mt-1 text-sm text-muted-foreground flex items-center gap-1.5 truncate">
-            {ticket.requester_name}
-          </p>
+    <article
+      className={`p-4 transition-all duration-300 hover:bg-surface-hover sm:p-5 animate-slide-up opacity-0 ${delayClass} ${
+        ticket.is_urgent ? "bg-destructive/[0.03]" : ""
+      } ${!ticket.has_response ? "shadow-[inset_3px_0_0_var(--warning)]" : ""}`}
+    >
+      <div className="min-w-0">
+        <div className="mb-3 flex flex-wrap items-center gap-2">
+          <span className="inline-flex items-center justify-center rounded-md bg-muted px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+            {ticket.ticket_number}
+          </span>
+          <TicketResponseBadge hasResponse={ticket.has_response} />
         </div>
+
+        <h2 className="break-words text-base font-semibold leading-snug text-foreground">
+          {ticket.subject}
+        </h2>
+        <p className="mt-1 break-words text-sm text-muted-foreground">
+          {ticket.requester_name}
+        </p>
       </div>
 
-      <div className="mt-4 flex flex-wrap items-center justify-between gap-4">
-        <div className="flex flex-wrap gap-2">
-          <TicketStatusBadge status={ticket.status} />
-          <TicketUrgencyBadge isUrgent={ticket.is_urgent} />
-        </div>
-        <Link
-          aria-label={`Abrir chamado ${ticket.ticket_number}`}
-          className="inline-flex shrink-0 items-center justify-center rounded-lg border border-border bg-background px-4 py-2 text-sm font-semibold text-foreground shadow-sm hover:bg-primary hover:text-primary-foreground hover:border-primary hover:-translate-y-0.5 hover:shadow-md transition-all duration-300 ease-out"
-          href={`/admin/tickets/${ticket.id}`}
-        >
-          Abrir
-        </Link>
+      <div className="mt-4 flex flex-wrap gap-2">
+        <TicketStatusBadge status={ticket.status} />
+        <TicketUrgencyBadge isUrgent={ticket.is_urgent} />
       </div>
 
-      <time
-        className="mt-4 block text-xs font-medium text-muted-foreground border-t border-border/50 pt-4"
-        dateTime={ticket.updated_at || ticket.created_at}
+      <div className="mt-4 border-t border-border/50 pt-4 text-xs text-muted-foreground">
+        <TicketTimeMeta ticket={ticket} />
+      </div>
+
+      <Link
+        aria-label={`Abrir chamado ${ticket.ticket_number}`}
+        className="mt-4 inline-flex min-h-11 w-full items-center justify-center rounded-lg border border-border bg-background px-4 py-2 text-sm font-semibold text-foreground shadow-sm transition-all duration-300 ease-out hover:border-primary hover:bg-primary hover:text-primary-foreground hover:shadow-md"
+        href={`/admin/tickets/${ticket.id}`}
       >
-        Atualizado em {formatDateTime(ticket.updated_at || ticket.created_at)}
-      </time>
+        Abrir chamado
+      </Link>
     </article>
+  );
+}
+
+function TicketTimeMeta({ ticket }: { ticket: AdminTicket }) {
+  const updatedAt = ticket.last_activity_at || ticket.updated_at || ticket.created_at;
+
+  return (
+    <div className="space-y-1">
+      <p className="font-medium text-foreground">
+        Aberto há {formatRelativeAge(ticket.created_at)}
+      </p>
+      <time className="block" dateTime={updatedAt}>
+        Atualizado em {formatDateTime(updatedAt)}
+      </time>
+    </div>
   );
 }
 
@@ -190,6 +227,20 @@ function TicketUrgencyBadge({ isUrgent }: { isUrgent: boolean }) {
   );
 }
 
+function TicketResponseBadge({ hasResponse }: { hasResponse: boolean }) {
+  return hasResponse ? (
+    <Badge variant="outline" showDot>Respondido</Badge>
+  ) : (
+    <Badge variant="warning" showDot>Sem resposta</Badge>
+  );
+}
+
 function hasActiveFilters(filters: AdminTicketFilters) {
-  return filters.status !== "all" || filters.urgency !== "all";
+  return (
+    filters.status !== "all" ||
+    filters.urgency !== "all" ||
+    filters.response !== "all" ||
+    filters.sort !== "updated_desc" ||
+    filters.query.length > 0
+  );
 }

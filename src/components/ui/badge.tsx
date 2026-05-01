@@ -22,7 +22,7 @@ export function Badge({
   className = "",
   showDot = false,
 }: BadgeProps) {
-  const baseStyles = "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border";
+  const baseStyles = "inline-flex items-center whitespace-nowrap px-2.5 py-0.5 rounded-full text-xs font-medium border";
   
   const variantStyles: Record<BadgeVariant, string> = {
     default: "bg-muted/50 text-muted-foreground border-transparent",

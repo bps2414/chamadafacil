@@ -8,7 +8,12 @@ import {
 } from "@/lib/data/tickets";
 import type { CreateTicketField } from "@/lib/validation/tickets";
 import { FieldError } from "@/components/ui/field-error";
-import { CheckIcon, SendIcon } from "@/components/ui/icons";
+import {
+  ArrowRightIcon,
+  CheckIcon,
+  DocumentIcon,
+  SendIcon,
+} from "@/components/ui/icons";
 import { Button } from "@/components/ui/button";
 
 const initialState: CreateTicketState = {
@@ -17,12 +22,12 @@ const initialState: CreateTicketState = {
 };
 
 export function TicketForm() {
+  const [copyFeedback, setCopyFeedback] = useState("");
   const [state, formAction, pending] = useActionState(
     createTicketAction,
     initialState,
   );
 
-  // Scroll the success banner into view automatically when ticket is created
   const successRef = useRef<HTMLElement>(null);
   useEffect(() => {
     if (state.status === "success" && successRef.current) {
@@ -30,30 +35,90 @@ export function TicketForm() {
     }
   }, [state.status]);
 
+  const lookupHref = state.ticketNumber
+    ? `/tickets/lookup?ticket_number=${encodeURIComponent(state.ticketNumber)}`
+    : "/tickets/lookup";
+
+  async function handleCopyTicketNumber() {
+    if (!state.ticketNumber) {
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(state.ticketNumber);
+      setCopyFeedback("Código copiado.");
+    } catch {
+      setCopyFeedback("Não foi possível copiar automaticamente.");
+    }
+  }
+
+  useEffect(() => {
+    if (!copyFeedback) {
+      return;
+    }
+
+    const timeout = window.setTimeout(() => setCopyFeedback(""), 3000);
+
+    return () => window.clearTimeout(timeout);
+  }, [copyFeedback]);
+
   return (
     <div className="mx-auto max-w-4xl">
       {state.status === "success" && state.ticketNumber ? (
         <section
           ref={successRef}
           aria-live="polite"
-          className="mb-8 rounded-xl border border-accent-foreground/20 bg-accent p-6 sm:p-8 animate-slide-up shadow-sm scroll-mt-24"
+          className="mb-6 scroll-mt-24 rounded-xl border border-accent-foreground/20 bg-accent/80 p-4 shadow-sm animate-slide-up sm:p-5"
         >
-          <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <span
               aria-hidden="true"
-              className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-accent-foreground text-white shadow-sm"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-accent-foreground text-white shadow-sm"
             >
-              <CheckIcon className="h-7 w-7" />
+              <CheckIcon className="h-5 w-5" />
             </span>
-            <div>
-              <p className="text-sm font-semibold text-accent-foreground">
-                Chamado criado com sucesso!
+            <div className="min-w-0 flex-1 lg:max-w-2xl">
+              <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:gap-3">
+                <p className="text-sm font-semibold text-accent-foreground">
+                  Chamado criado com sucesso!
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  Use o código e o e-mail informado para consultar o status.
+                </p>
+              </div>
+              <div className="mt-4 flex flex-col gap-3 rounded-lg border border-accent-foreground/20 bg-background/85 p-3 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+                <div className="min-w-0">
+                  <p className="mb-1 flex items-center gap-2 text-[11px] font-semibold uppercase text-muted-foreground">
+                    <DocumentIcon className="h-3.5 w-3.5" />
+                    Código do chamado
+                  </p>
+                  <p className="break-all font-mono text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+                    {state.ticketNumber}
+                  </p>
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleCopyTicketNumber}
+                  className="w-full shrink-0 sm:w-auto"
+                >
+                  Copiar código
+                </Button>
+              </div>
+              <p
+                aria-live="polite"
+                className="mt-2 min-h-5 text-sm font-medium text-accent-foreground"
+              >
+                {copyFeedback}
               </p>
-              <p className="mt-2 text-4xl font-bold tracking-tight text-foreground">
-                {state.ticketNumber}
-              </p>
-              <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
-                Guarde este número com cuidado. Você precisará dele e do seu e-mail para acompanhar o status e ler as respostas da equipe.
+            </div>
+            <div className="flex w-full flex-col gap-2 lg:w-48">
+              <Button href={lookupHref} size="md" className="w-full">
+                Consultar chamado
+                <ArrowRightIcon className="ml-2 h-4 w-4" />
+              </Button>
+              <p className="text-xs leading-relaxed text-muted-foreground lg:text-center">
+                O e-mail será informado apenas na consulta.
               </p>
             </div>
           </div>
@@ -64,7 +129,7 @@ export function TicketForm() {
         <form action={formAction} className="p-4 sm:p-6 lg:p-8 space-y-8 sm:space-y-10">
           <fieldset className="space-y-6">
             <legend className="text-lg font-semibold text-foreground border-b border-border pb-2 w-full mb-6">
-              1. Suas Informações
+              1. Suas informações
             </legend>
             <div className="grid gap-6 md:grid-cols-2">
               <TextField
@@ -112,7 +177,7 @@ export function TicketForm() {
                 required
                 value={state.values?.subject}
               />
-              
+
               <DescriptionField
                 error={firstError(state.errors?.description)}
                 key={state.values?.description ?? state.status}
@@ -193,7 +258,7 @@ function DescriptionField({
           required
         />
         <div className="absolute bottom-3 right-4 flex items-center justify-end pointer-events-none">
-          <span className={`text-xs px-2 py-1 rounded-md bg-background border ${descriptionLength > 1900 ? 'text-destructive border-destructive/30' : 'text-muted-foreground border-border'}`}>
+          <span className={`text-xs px-2 py-1 rounded-md bg-background border ${descriptionLength > 1900 ? "text-destructive border-destructive/30" : "text-muted-foreground border-border"}`}>
             {descriptionLength}/2000
           </span>
         </div>

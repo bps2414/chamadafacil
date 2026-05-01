@@ -1,48 +1,60 @@
-# Textos para Portfólio
+# Textos Para Portfolio
 
-Este arquivo reúne textos prontos para apresentar o ChamadaFácil em site pessoal, GitHub, currículo ou candidatura. Ajuste apenas os links finais de demo e repositório quando estiverem publicados.
+Textos prontos para site pessoal, GitHub, curriculo, LinkedIn ou candidatura. A narrativa abaixo descreve o que existe hoje e separa claramente melhorias futuras.
 
-## Versão PT-BR
+Links:
 
-### Título do projeto
+- Demo: [chamadafacil.vercel.app](https://chamadafacil.vercel.app)
+- GitHub: [github.com/bps2414/chamadafacil](https://github.com/bps2414/chamadafacil)
 
-ChamadaFácil
+Assets:
 
-### Subtítulo
+- `public/portfolio/chamadafacil-card-light.png`
+- `public/portfolio/chamadafacil-card-dark.png`
+- `public/portfolio/chamadafacil-card-square.png`
 
-Sistema web de chamados para suporte técnico em pequenos negócios.
+## PT-BR
 
-### Descrição curta para card
+### Titulo
 
-Help desk full-stack com abertura pública de chamados, consulta por código e e-mail, painel administrativo autenticado e gerenciamento de status, urgência e respostas.
+ChamadaFacil
 
-### Descrição média para página de projeto
+### Subtitulo
 
-ChamadaFácil é um sistema web de chamados pensado para pequenos negócios que precisam organizar solicitações de suporte sem depender de planilhas ou conversas espalhadas. Usuários públicos podem abrir e consultar chamados sem criar conta, enquanto operadores autenticados gerenciam a fila em um painel administrativo protegido.
+Sistema web de chamados para pequenos negocios.
 
-### Descrição longa/case
+### Descricao curta
 
-O ChamadaFácil foi desenvolvido como um MVP single-company de help desk para demonstrar fundamentos práticos de desenvolvimento web full-stack. O produto cobre o fluxo essencial de suporte: abertura de chamado, geração de código, consulta pública por código e e-mail, login administrativo, listagem de tickets, filtros por status e urgência, detalhe do chamado, atualização de status e respostas visíveis ao solicitante.
+Help desk full-stack com abertura publica de chamados, consulta por codigo/e-mail e painel admin autenticado com busca, filtros, ordenacao, status, urgencia e respostas.
 
-O projeto usa Next.js App Router, TypeScript, Tailwind CSS, Supabase Auth e PostgreSQL. A implementação inclui Server Actions, validação server-side, Row Level Security, proteção de rotas administrativas, uso server-only da service role key e rate limit básico para formulários públicos. O escopo foi mantido de forma honesta: não há multiempresa, anexos, e-mail automático, SLA ou base de conhecimento no MVP atual.
+### Descricao media
 
-### Lista de funcionalidades
+ChamadaFacil e um sistema web de chamados para pequenos negocios que precisam organizar solicitacoes de suporte sem depender de planilhas ou conversas espalhadas. Solicitantes abrem e consultam chamados sem criar conta, enquanto operadores autenticados gerenciam uma fila operacional em painel protegido.
 
-- Landing page em português brasileiro.
-- Abertura pública de chamados sem cadastro.
-- Geração automática de número do chamado.
-- Consulta pública por código do chamado e e-mail.
+### Descricao longa
+
+O ChamadaFacil foi desenvolvido como um MVP single-company de help desk para demonstrar fundamentos praticos de desenvolvimento full-stack. O produto cobre o fluxo essencial de suporte: abertura publica, geracao de codigo, consulta por codigo e e-mail, login administrativo, busca e filtros na fila, ordenacao, destaque de chamados urgentes/sem resposta, detalhe do chamado, atualizacao de status/urgencia e respostas publicas ao solicitante.
+
+A implementacao usa Next.js App Router, TypeScript, Tailwind CSS, Supabase Auth e PostgreSQL. O projeto inclui Server Actions, validacao server-side, Row Level Security, protecao de rotas administrativas, uso server-only da service role key, rate limit basico para formularios publicos e testes unitarios com Vitest. O escopo e honesto: nao ha multiempresa, RBAC completo, anexos, e-mail automatico, SLA ou base de conhecimento no MVP atual.
+
+### Funcionalidades
+
+- Landing page em PT-BR.
+- Abertura publica de chamados sem cadastro.
+- Codigo de chamado gerado e copiavel.
+- Consulta publica por codigo/e-mail.
 - Login administrativo com Supabase Auth.
 - Dashboard protegido para operadores.
-- Lista responsiva de chamados.
-- Filtros por status e urgência.
-- Detalhe do chamado com dados do solicitante.
-- Atualização de status e marcação de urgência.
-- Respostas públicas do operador.
+- Busca por numero, assunto e solicitante.
+- Filtros por status, urgencia e resposta.
+- Ordenacao por atualizacao, criacao e urgencia.
+- Destaque para chamados urgentes e sem resposta.
+- Detalhe com historico, dados do solicitante e painel de gerenciamento.
+- Respostas publicas do operador.
 - Estados de loading, erro, vazio e sucesso.
-- Dados locais fictícios para demonstração.
+- Dados ficticios para desenvolvimento local.
 
-### Lista de tecnologias
+### Tecnologias
 
 - Next.js App Router
 - React
@@ -52,98 +64,98 @@ O projeto usa Next.js App Router, TypeScript, Tailwind CSS, Supabase Auth e Post
 - Supabase PostgreSQL
 - Row Level Security
 - Server Actions
-- Vercel como alvo de deploy
+- Vitest
+- Vercel
 
 ### O que eu fiz
 
-- Defini o escopo do MVP e mantive o produto focado em um fluxo realista de help desk.
-- Modelei o banco de dados para chamados, respostas e eventos de rate limit.
-- Implementei rotas públicas para abertura e consulta de chamados.
-- Implementei login e painel administrativo protegido.
-- Criei validações server-side e mensagens de erro claras.
-- Configurei RLS, headers de segurança, proteção de rotas e uso server-only da service role key.
-- Preparei documentação bilíngue, estudo de caso, checklist de deploy e materiais para portfólio.
+- Defini um escopo de MVP realista para um fluxo de suporte.
+- Modelei tickets, respostas e eventos de rate limit.
+- Implementei rotas publicas para abertura e consulta.
+- Implementei login e painel admin protegido.
+- Criei fila admin operacional com busca, filtros e ordenacao.
+- Configurei RLS, headers de seguranca e service role server-only.
+- Adicionei validacoes server-side e testes unitarios para regras puras.
+- Preparei README, case study, checklist de screenshots e textos de portfolio.
 
-### Principais aprendizados
+### Bullets tecnicos
 
-- Modelagem de um fluxo essencial de suporte técnico.
-- Separação entre área pública e área administrativa no App Router.
-- Uso de Server Actions para formulários e mutações.
-- Integração de Supabase Auth com sessões no servidor.
-- Escrita de políticas RLS proporcionais ao escopo do produto.
-- Validação server-side e tratamento de estados de formulário.
-- Comunicação técnica honesta para portfólio.
+- Next.js App Router com Server Components e Server Actions.
+- Supabase Auth para painel administrativo protegido.
+- PostgreSQL com migrations, constraints e RLS.
+- Validacao server-side para formularios publicos e admin.
+- Rate limit basico com hash de IP/e-mail.
+- Fila admin com busca, filtros e ordenacao persistidos na URL.
+- Testes unitarios para validacoes, normalizacao, filtros e regras puras.
 
-### Limitações do MVP
+### Limitações conscientes
 
-- Não há multiempresa ou isolamento por tenant.
-- Não há RBAC; todo usuário autenticado no Supabase é operador/admin.
-- Não há cadastro público de solicitantes.
-- Não há notificações por e-mail.
-- Não há anexos.
-- Não há SLA ou indicadores de atraso.
-- Não há base de conhecimento.
-- Não há testes automatizados configurados no momento.
+- Nao ha RBAC.
+- Nao ha multiempresa.
+- Nao ha conta publica para solicitante.
+- Nao ha anexos.
+- Nao ha e-mail automatico.
+- Nao ha SLA.
+- Nao ha base de conhecimento.
+- Nao ha auditoria avancada.
 
 ### Melhorias futuras
 
-- RBAC com papéis de admin, operador e visualizador.
-- Notificações por e-mail ao abrir ou responder chamados.
+- RBAC com papeis.
+- Multiempresa com isolamento por tenant.
+- E-mail transacional.
 - Upload de anexos.
-- Notas internas para operadores.
-- Histórico/auditoria mais detalhado.
-- SLA e indicadores de prazo.
-- Exportação CSV.
+- SLA e indicadores de atraso.
+- Exportacao CSV.
 - Base de conhecimento.
-- Testes automatizados para fluxos críticos.
+- Notas internas.
+- Testes de integracao/e2e.
 
-### CTA para demo
+### CTA
 
-Ver demo do ChamadaFácil
+- Ver demo do ChamadaFacil
+- Ver codigo no GitHub
 
-### CTA para GitHub
+## EN
 
-Ver código no GitHub
+### Title
 
-## Versão EN
-
-### Project title
-
-ChamadaFácil
+ChamadaFacil
 
 ### Subtitle
 
 Web-based support ticket system for small businesses.
 
-### Short card description
+### Short description
 
-Full-stack help desk with public ticket creation, lookup by code and e-mail, authenticated admin dashboard, and status, urgency, and response management.
+Full-stack help desk with public ticket creation, code/e-mail lookup, and authenticated admin dashboard with search, filters, sorting, status, urgency, and responses.
 
-### Medium project page description
+### Medium description
 
-ChamadaFácil is a web-based ticket system designed for small businesses that need a clearer way to organize support requests without relying on spreadsheets or scattered conversations. Public requesters can create and track tickets without an account, while authenticated operators manage the queue through a protected admin dashboard.
+ChamadaFacil is a web-based ticket system for small businesses that need to organize support requests without relying on spreadsheets or scattered conversations. Requesters create and track tickets without accounts, while authenticated operators manage an operational queue in a protected admin panel.
 
-### Long case description
+### Long description
 
-ChamadaFácil was built as a single-company help desk MVP to demonstrate practical full-stack web development fundamentals. The product covers the essential support workflow: ticket creation, ticket code generation, public lookup by code and e-mail, admin login, ticket listing, filters by status and urgency, ticket detail view, status updates, and public operator responses.
+ChamadaFacil was built as a single-company help desk MVP to demonstrate practical full-stack development fundamentals. The product covers the essential support workflow: public ticket creation, ticket code generation, lookup by code and e-mail, admin login, queue search and filters, sorting, urgent/unanswered highlights, ticket detail, status/urgency updates, and public operator responses.
 
-The project uses Next.js App Router, TypeScript, Tailwind CSS, Supabase Auth, and PostgreSQL. The implementation includes Server Actions, server-side validation, Row Level Security, protected admin routes, server-only use of the service role key, and basic rate limiting for public forms. The scope is intentionally honest: the current MVP does not include multi-company support, attachments, automated e-mail, SLA tracking, or a knowledge base.
+The implementation uses Next.js App Router, TypeScript, Tailwind CSS, Supabase Auth, and PostgreSQL. It includes Server Actions, server-side validation, Row Level Security, protected admin routes, server-only service role usage, basic rate limiting for public forms, and Vitest unit tests. The scope is honest: the current MVP does not include multi-company support, full RBAC, attachments, automated e-mail, SLA tracking, or a knowledge base.
 
-### Feature list
+### Features
 
 - Brazilian Portuguese landing page.
-- Public ticket creation without requester accounts.
-- Automatic ticket code generation.
-- Public ticket lookup by code and e-mail.
+- Public ticket creation without accounts.
+- Generated and copyable ticket code.
+- Public lookup by code/e-mail.
 - Admin login with Supabase Auth.
 - Protected operator dashboard.
-- Responsive ticket list.
-- Filters by status and urgency.
-- Ticket detail view with requester data.
-- Status updates and urgency flag.
+- Search by number, subject, and requester.
+- Filters by status, urgency, and response state.
+- Sorting by update date, creation date, and urgency.
+- Highlights for urgent and unanswered tickets.
+- Detail page with history, requester data, and management panel.
 - Public operator responses.
 - Loading, error, empty, and success states.
-- Fictional local demo data.
+- Fictional local development data.
 
 ### Tech stack
 
@@ -155,55 +167,54 @@ The project uses Next.js App Router, TypeScript, Tailwind CSS, Supabase Auth, an
 - Supabase PostgreSQL
 - Row Level Security
 - Server Actions
-- Vercel as the deployment target
+- Vitest
+- Vercel
 
 ### What I built
 
-- Defined a focused MVP scope around a realistic help desk workflow.
-- Modeled the database for tickets, responses, and rate-limit events.
-- Implemented public routes for ticket creation and lookup.
-- Implemented authenticated admin login and dashboard.
-- Created server-side validation and clear error states.
-- Configured RLS, security headers, admin route protection, and server-only service role usage.
-- Prepared bilingual documentation, a case study, deployment checklist, and portfolio-ready copy.
+- Defined a realistic MVP scope for a support workflow.
+- Modeled tickets, responses, and rate-limit events.
+- Implemented public routes for creation and lookup.
+- Implemented protected admin login and dashboard.
+- Created an operational admin queue with search, filters, and sorting.
+- Configured RLS, security headers, and server-only service role usage.
+- Added server-side validation and unit tests for pure rules.
+- Prepared README, case study, screenshot checklist, and portfolio copy.
 
-### Main learnings
+### Technical bullets
 
-- Modeling a core support workflow.
-- Separating public and admin areas in the App Router.
-- Using Server Actions for forms and mutations.
-- Integrating Supabase Auth with server-side sessions.
-- Writing RLS policies aligned with the product scope.
-- Handling server-side validation and form states.
-- Presenting a technical project honestly in a portfolio.
+- Next.js App Router with Server Components and Server Actions.
+- Supabase Auth for the protected admin panel.
+- PostgreSQL with migrations, constraints, and RLS.
+- Server-side validation for public and admin forms.
+- Basic rate limiting with hashed IP/e-mail subjects.
+- Admin queue search, filters, and sorting persisted in the URL.
+- Unit tests for validation, normalization, filters, and pure workflow rules.
 
-### MVP limitations
+### Conscious limitations
 
-- No multi-company or tenant isolation.
-- No RBAC; every authenticated Supabase user is an admin/operator.
+- No RBAC.
+- No multi-company support.
 - No public requester accounts.
-- No e-mail notifications.
-- No file attachments.
-- No SLA or overdue indicators.
+- No attachments.
+- No automated e-mail.
+- No SLA tracking.
 - No knowledge base.
-- No automated test script yet.
+- No advanced audit trail.
 
 ### Future improvements
 
-- RBAC with admin, operator, and viewer roles.
-- E-mail notifications when tickets are created or answered.
-- File attachments.
-- Internal-only operator notes.
-- More detailed history/audit trail.
-- SLA and due-date indicators.
+- RBAC with roles.
+- Multi-company tenant isolation.
+- Transactional e-mail.
+- File uploads.
+- SLA and overdue indicators.
 - CSV export.
 - Knowledge base.
-- Automated tests for critical flows.
+- Internal notes.
+- Integration/e2e tests.
 
-### Live demo CTA
+### CTA
 
-View ChamadaFácil demo
-
-### GitHub CTA
-
-View code on GitHub
+- View ChamadaFacil demo
+- View code on GitHub

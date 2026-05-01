@@ -1,71 +1,80 @@
-# Checklist Final de Publicação
+# Checklist Final de Publicacao
 
-Use este checklist antes de colocar o ChamadaFácil oficialmente no portfólio.
+Use este checklist antes de colocar o ChamadaFacil oficialmente no GitHub/portfolio.
 
 ## Produto e Demo
 
-- [ ] Deploy funcionando.
-- [ ] Link da demo adicionado no README.
-- [ ] Link da demo adicionado no estudo de caso.
-- [ ] Fluxo público de abertura de chamado testado.
-- [ ] Fluxo público de consulta de chamado testado.
+- [ ] Deploy funcionando em `https://chamadafacil.vercel.app`.
+- [x] Link da demo no README.
+- [x] Link da demo no case study.
+- [ ] Fluxo publico de abertura testado.
+- [ ] Sucesso com codigo copiavel testado.
+- [ ] Consulta publica com chamado existente testada.
+- [ ] Consulta publica nao encontrada testada.
 - [ ] Login admin testado.
-- [ ] Dashboard admin testado.
-- [ ] Detalhe do chamado testado.
-- [ ] Atualização de status, urgência e resposta testadas.
-- [ ] Mobile testado.
+- [ ] Logout admin testado.
+- [ ] Dashboard admin testado com busca, filtros, sort e limpar.
+- [ ] Detalhe admin testado com status, urgencia e resposta.
+- [ ] Mobile revisado em abertura, consulta, dashboard e detalhe.
 - [ ] Console do navegador sem erros relevantes.
 
-## GitHub e Documentação
+## GitHub e Documentacao
 
-- [ ] GitHub público limpo.
-- [ ] README.md bonito e atualizado.
-- [ ] README.en.md atualizado.
-- [ ] Case study em português revisado.
-- [ ] Case study em inglês revisado.
-- [ ] SECURITY.md claro e sem promessas exageradas.
-- [ ] DEPLOYMENT.md com instruções de produção.
-- [ ] `.env.example` sem segredos.
-- [ ] Screenshots adicionados ou revisados.
+- [ ] GitHub publico revisado.
+- [x] README PT-BR atualizado.
+- [x] README EN atualizado.
+- [x] Case study PT-BR atualizado.
+- [x] Case study EN atualizado.
+- [x] Textos de portfolio atualizados.
+- [x] Bullets tecnicos/curriculo atualizados.
+- [x] Checklist de screenshots atualizado.
+- [x] Limitacoes conscientes documentadas.
+- [x] Comandos incluem `npm test`.
 - [ ] README preview conferido no GitHub.
-- [ ] Links relativos funcionando.
-- [ ] Sem pendências visíveis em documentos de apresentação.
-- [ ] Sem placeholders de demo/repositório depois da publicação.
+- [x] Links relativos principais revisados.
+- [ ] Screenshots faltantes capturados.
 
-## Supabase e Segurança
+## Supabase e Seguranca
 
-- [ ] Variáveis de ambiente corretas no provedor de deploy.
-- [ ] Supabase production configurado.
-- [ ] Migrations aplicadas no banco remoto.
-- [ ] Seed local não aplicado em produção.
-- [ ] Public signups desativado.
-- [ ] Admin criado manualmente.
-- [ ] Lista de usuários do Supabase revisada.
+- [x] `.env` ignorado pelo Git.
+- [x] `.env.example` versionado sem valores reais.
+- [x] Admin de seed documentado como local/dev.
+- [x] Deploy nao recomenda publicar usuario/senha de demo perigoso.
+- [ ] Variaveis corretas no provedor de deploy.
+- [ ] Public signups desativado em producao.
+- [ ] Operadores criados manualmente em producao.
+- [ ] Seed local nao aplicado em producao.
 - [ ] RLS verificado em `tickets`.
 - [ ] RLS verificado em `ticket_responses`.
 - [ ] RLS verificado em `public_rate_limits`.
-- [ ] Service role key disponível apenas no servidor.
-- [ ] Nenhuma credencial real em screenshots, README, logs ou issues.
-- [ ] Rate limit básico testado.
+- [x] Service role key real ausente de docs versionados e codigo client-side.
+- [x] Busca por tokens/chaves reais revisada.
 
-## Qualidade Técnica
+## Qualidade Tecnica
 
-- [ ] `npm run lint` passando.
-- [ ] `npm run typecheck` passando.
-- [ ] `npm run build` passando.
-- [ ] Rotas públicas testadas: `/`, `/tickets/new`, `/tickets/lookup`.
+- [x] `npm test` passando.
+- [x] `npm run lint` passando.
+- [x] `npm run typecheck` passando.
+- [x] `npm run build` passando.
+- [ ] Rotas publicas testadas: `/`, `/tickets/new`, `/tickets/lookup`.
 - [ ] Redirecionamentos testados: `/abrir-chamado`, `/consultar-chamado`, `/admin/tickets`.
 - [ ] Rotas privadas testadas: `/admin`, `/admin/tickets/[id]`.
 - [ ] Estado vazio testado no dashboard.
-- [ ] Estado de erro validado sem expor detalhes sensíveis.
+- [ ] Estado de erro revisado sem detalhes sensiveis.
 
-## Portfólio e Currículo
+## Portfolio e Curriculo
 
-- [ ] Card no portfólio atualizado.
-- [ ] Texto curto do projeto revisado.
-- [ ] Texto médio/case revisado.
-- [ ] Link do GitHub no portfólio.
-- [ ] Link da demo no portfólio.
-- [ ] Currículo atualizado com bullets do projeto.
-- [ ] LinkedIn atualizado, se for usar o projeto lá.
-- [ ] Versão em inglês revisada para candidaturas internacionais.
+- [x] Card de portfolio atualizado.
+- [x] Descricao curta revisada.
+- [x] Descricao media/case revisada.
+- [x] Link do GitHub incluido nos materiais.
+- [x] Link da demo incluido nos materiais.
+- [x] Versao em ingles revisada.
+- [ ] Curriculo/LinkedIn atualizados fora do repositorio, se aplicavel.
+
+## Pendencias Antes da Publicacao Final
+
+- Capturar os screenshots marcados como pendentes em `docs/SCREENSHOTS_CHECKLIST.md`.
+- Conferir README renderizado no GitHub.
+- Executar smoke test no deploy real.
+- Confirmar configuracoes finais do Supabase production.

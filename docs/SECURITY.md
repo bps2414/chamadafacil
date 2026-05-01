@@ -228,6 +228,7 @@ Antes de publicar:
 - Testar redirecionamento de `/admin` sem sessão.
 - Testar atualização de status, urgência e resposta.
 - Garantir que a service role key não aparece no bundle, logs ou screenshots.
+- Rodar `npm test`.
 - Rodar `npm run lint`.
 - Rodar `npm run typecheck`.
 - Rodar `npm run build`.
@@ -240,7 +241,7 @@ Antes de publicar:
 - Não há separação multiempresa.
 - Não há CAPTCHA.
 - Não há camada WAF configurada no repositório.
-- Não há script de testes automatizados no momento.
+- Não há testes de integração/e2e ou testes automatizados de policies RLS no momento.
 
 Essas limitações são aceitáveis para o escopo atual desde que o sistema seja operado como ferramenta interna de uma única empresa e com criação manual de operadores.
 

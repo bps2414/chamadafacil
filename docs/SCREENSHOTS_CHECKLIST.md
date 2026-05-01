@@ -1,27 +1,53 @@
 # Checklist de Screenshots
 
-Use este checklist antes de publicar o projeto no portfólio. Prefira screenshots finais da demo publicada, com dados fictícios e sem variáveis de ambiente, chaves, tokens, e-mails pessoais ou credenciais reais.
+Use este checklist antes de publicar o projeto no portfolio. Todos os prints devem usar dados ficticios e nao podem expor variaveis de ambiente, tokens, cookies, URLs privadas, e-mails pessoais ou credenciais reais.
 
-| Print | Nome sugerido | O que deve aparecer | Por que é útil no portfólio |
+## Prints Atuais no Repositorio
+
+Arquivos ja existentes em `public/screenshots/`:
+
+- [x] `landing-desktop.png`
+- [x] `ticket-new-form.png`
+- [x] `ticket-lookup-form.png`
+- [x] `admin-login.png`
+- [x] `admin-dashboard.png`
+- [x] `admin-ticket-detail.png`
+
+Assets de card existem em:
+
+- `public/portfolio/`
+- `docs/portfolio-assets/`
+
+## Prints Finais Recomendados
+
+| Status | Print | Nome sugerido | O que deve aparecer |
 | --- | --- | --- | --- |
-| Landing page desktop | `landing-desktop.png` | Hero do ChamadaFácil, CTA de abrir chamado, CTA de consultar chamado e visualização do produto. | Mostra rapidamente o propósito do produto e a qualidade da apresentação inicial. |
-| Landing page mobile | `landing-mobile.png` | Header mobile, título principal, CTAs empilhados e primeira dobra legível. | Demonstra responsividade e cuidado com a experiência em telas pequenas. |
-| Abrir chamado | `ticket-new-form.png` | Formulário público com campos de solicitante, assunto, descrição e botão de envio. | Mostra fluxo público, UX de formulário e clareza de entrada de dados. |
-| Confirmação de chamado criado | `ticket-created-success.png` | Mensagem de sucesso com número do chamado gerado, usando dados fictícios. | Prova o fluxo end-to-end de criação e a geração automática de código. |
-| Consulta de chamado | `ticket-lookup-form.png` | Tela de consulta com campos de número do chamado e e-mail. | Mostra como o solicitante acompanha um ticket sem criar conta. |
-| Resultado da consulta | `ticket-lookup-result.png` | Status, urgência, assunto, descrição e histórico/respostas do chamado. | Mostra privacidade mínima por código/e-mail e fluxo público de acompanhamento. |
-| Login admin | `admin-login.png` | Tela de login administrativo sem credenciais reais preenchidas. | Mostra autenticação e separação entre área pública e privada. |
-| Dashboard admin | `admin-dashboard.png` | Cards de resumo, filtros e lista de chamados recentes. | Demonstra painel protegido, leitura de dados e organização operacional. |
-| Lista de chamados | `admin-ticket-list.png` | Tabela desktop ou cards mobile com chamados, status, urgência e ação de abrir. | Mostra capacidade de administrar uma fila de suporte realista. |
-| Detalhe do chamado | `admin-ticket-detail.png` | Dados do solicitante, descrição original, histórico e painel de gerenciamento. | Mostra profundidade do CRUD/fluxo administrativo sem precisar adicionar features grandes. |
-| Resposta/status/prioridade | `admin-ticket-management.png` | Select de status, checkbox de urgência e área para resposta pública. | Evidencia mutações administrativas, validação e controle de fluxo. |
-| Base de conhecimento | `knowledge-base-future.png` | Não aplicável no MVP atual. Use apenas se essa feature for implementada no futuro. | Evita documentar uma funcionalidade inexistente como se estivesse pronta. |
-| README preview | `github-readme-preview.png` | README no GitHub com badges, screenshots e links para case study/docs. | Ajuda a mostrar maturidade de documentação quando o repositório público estiver pronto. |
+| [x] | Landing desktop | `landing-desktop.png` | Hero, proposta do ChamadaFacil, CTA de abrir chamado e CTA de consultar. |
+| [x] | Abertura de chamado | `ticket-new-form.png` | Formulario publico com solicitante, assunto, descricao e envio. |
+| [ ] | Sucesso com codigo copiavel | `ticket-created-success.png` | Mensagem de sucesso, codigo destacado, botao de copiar e CTA para consulta. |
+| [x] | Consulta inicial | `ticket-lookup-form.png` | Campos de numero do chamado e e-mail. |
+| [ ] | Consulta com resultado | `ticket-lookup-result.png` | Status, urgencia, assunto, descricao, timeline e respostas. |
+| [ ] | Consulta nao encontrada | `ticket-lookup-not-found.png` | Mensagem neutra pedindo para conferir codigo/e-mail, sem revelar se o ticket existe. |
+| [x] | Dashboard admin operacional | `admin-dashboard.png` | Cards de resumo, busca, filtros, ordenacao e lista de chamados. |
+| [ ] | Dashboard admin mobile | `admin-dashboard-mobile.png` | Filtros empilhados e cards mobile sem scroll horizontal. |
+| [x] | Detalhe admin com resposta | `admin-ticket-detail.png` | Dados do solicitante, timeline, status, urgencia e resposta publica. |
+| [ ] | README preview | `github-readme-preview.png` | README renderizado no GitHub com screenshots e links. |
 
-## Recomendações rápidas
+## Criterios de Seguranca dos Prints
 
-- Use dados fictícios e consistentes com o seed local.
-- Não exponha URLs privadas do Supabase, tokens, cookies ou credenciais.
-- Evite prints com console aberto, warnings visíveis ou estado quebrado.
-- Faça pelo menos um print em desktop e um em mobile.
-- Atualize os caminhos dos screenshots no README se trocar os arquivos atuais.
+- [ ] Sem `.env`, `.env.local` ou painel de variaveis aberto.
+- [ ] Sem `SUPABASE_SERVICE_ROLE_KEY`.
+- [ ] Sem anon key real em contexto sensivel.
+- [ ] Sem cookies, headers, DevTools Network ou console aberto.
+- [ ] Sem senha administrativa preenchida.
+- [ ] Sem dados de cliente real.
+- [ ] Sem URL privada do projeto Supabase se ela nao for intencionalmente publica.
+- [ ] Admin de seed aparece apenas como contexto local/dev, nunca como login publico de producao.
+
+## Recomendacoes
+
+- Use o seed local ou dados de demo ficticios.
+- Prefira viewport desktop para landing/admin e viewport mobile para pelo menos um print do admin.
+- Antes de substituir imagens no README, confirme que os arquivos existem em `public/screenshots/`.
+- Se um print mostrar falha, loading infinito ou warning visivel, refaca.
+- O README pode apontar apenas para os prints ja capturados; os demais ficam como checklist ate serem gerados.

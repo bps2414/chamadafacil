@@ -5,6 +5,7 @@ import { TicketLookupForm } from "@/components/tickets/ticket-lookup-form";
 import { InfoCard } from "@/components/ui/info-card";
 import { InfoIcon, MessageIcon } from "@/components/ui/icons";
 import { OG_IMAGE, SITE_URL } from "@/lib/seo";
+import { normalizeTicketNumber } from "@/lib/validation/tickets";
 
 export const metadata: Metadata = {
   title: "Consultar chamado",
@@ -26,7 +27,23 @@ export const metadata: Metadata = {
   description: "Consulte o status do seu chamado usando número e e-mail.",
 };
 
-export default function TicketLookupPage() {
+type TicketLookupPageProps = {
+  searchParams: Promise<{
+    ticket_number?: string | string[];
+  }>;
+};
+
+export default async function TicketLookupPage({
+  searchParams,
+}: TicketLookupPageProps) {
+  const params = await searchParams;
+  const rawTicketNumber = Array.isArray(params.ticket_number)
+    ? params.ticket_number[0]
+    : params.ticket_number;
+  const initialTicketNumber = rawTicketNumber
+    ? normalizeTicketNumber(rawTicketNumber)
+    : "";
+
   return (
     <PublicPageShell active="lookup">
       <section className="py-12 sm:py-20 bg-surface-hover min-h-[calc(100vh-64px)]">
@@ -43,7 +60,7 @@ export default function TicketLookupPage() {
 
           <div className="grid lg:grid-cols-3 gap-8 max-w-5xl mx-auto items-start">
             <div className="lg:col-span-2 animate-slide-up animate-delay-150">
-              <TicketLookupForm />
+              <TicketLookupForm initialTicketNumber={initialTicketNumber} />
             </div>
             
             <div className="space-y-6 animate-slide-up animate-delay-300">

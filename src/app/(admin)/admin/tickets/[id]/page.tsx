@@ -10,11 +10,13 @@ import {
 } from "@/components/admin/admin-ticket-detail";
 import { Container } from "@/components/ui/container";
 import {
-  createAdminTicketResponseAction,
   getAdminTicketDetail,
   getAuthenticatedAdminUser,
-  updateAdminTicketMetaAction,
 } from "@/lib/data/admin-tickets";
+import {
+  createAdminTicketResponseAction,
+  updateAdminTicketMetaAction,
+} from "@/lib/data/admin-ticket-actions";
 
 export const dynamic = "force-dynamic";
 

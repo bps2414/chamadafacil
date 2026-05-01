@@ -75,9 +75,8 @@ Open `http://localhost:3000`.
 ## Local Verification
 
 ```bash
+npm test
 npm run lint
 npm run typecheck
 npm run build
 ```
-
-There is currently no automated test script.

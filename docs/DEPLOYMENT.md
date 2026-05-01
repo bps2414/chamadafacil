@@ -40,6 +40,7 @@ Antes de publicar:
 Comandos recomendados:
 
 ```bash
+npm test
 npm run lint
 npm run typecheck
 npm run build
@@ -209,6 +210,7 @@ Se uma migration causar problema:
 
 ```bash
 npm run dev
+npm test
 npm run lint
 npm run typecheck
 npm run build
