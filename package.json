@@ -8,6 +8,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "supabase": "supabase",
@@ -33,7 +35,8 @@
     "eslint-config-next": "^16.2.4",
     "supabase": "^2.95.6",
     "tailwindcss": "^4.2.4",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.5"
   },
   "overrides": {
     "next": {

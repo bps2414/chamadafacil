@@ -2,6 +2,12 @@ import type { User } from "@supabase/supabase-js";
 import { revalidatePath } from "next/cache";
 import type { TicketStatus } from "@/lib/data/tickets";
 import {
+  getTicketResolvedAt,
+  type AdminTicketFilters,
+  type AdminTicketStatusFilter,
+  type AdminTicketUrgencyFilter,
+} from "@/lib/data/admin-ticket-workflow";
+import {
   createServerSupabaseClient,
   hasSupabasePublicEnv,
 } from "@/lib/supabase/server";
@@ -13,13 +19,8 @@ import {
 } from "@/lib/validation/admin-tickets";
 import type { FieldErrors } from "@/lib/validation/tickets";
 
-export type AdminTicketStatusFilter = "all" | TicketStatus;
-export type AdminTicketUrgencyFilter = "all" | "urgent" | "normal";
-
-export type AdminTicketFilters = {
-  status: AdminTicketStatusFilter;
-  urgency: AdminTicketUrgencyFilter;
-};
+export { parseAdminTicketFilters } from "@/lib/data/admin-ticket-workflow";
+export type { AdminTicketFilters, AdminTicketStatusFilter, AdminTicketUrgencyFilter };
 
 export type AdminTicket = {
   created_at: string;
@@ -89,9 +90,6 @@ type AdminTicketStatusRow = {
   resolved_at: string | null;
   status: TicketStatus;
 };
-
-const statusValues = ["open", "in_progress", "resolved"] as const;
-const urgencyValues = ["urgent", "normal"] as const;
 
 export async function getAuthenticatedAdminUser(): Promise<User | null> {
   if (!hasSupabasePublicEnv()) {
@@ -319,10 +317,11 @@ export async function updateAdminTicketMetaAction(
       };
     }
 
-    const resolvedAt =
-      validation.data.status === "resolved"
-        ? currentTicket.resolved_at ?? new Date().toISOString()
-        : null;
+    const resolvedAt = getTicketResolvedAt({
+      currentResolvedAt: currentTicket.resolved_at,
+      now: new Date().toISOString(),
+      status: validation.data.status,
+    });
 
     const { error } = await supabase
       .from("tickets")
@@ -431,35 +430,6 @@ export async function createAdminTicketResponseAction(
       status: "error",
     };
   }
-}
-
-export function parseAdminTicketFilters(input: {
-  status?: string | string[];
-  urgency?: string | string[];
-}): AdminTicketFilters {
-  const rawStatus = firstValue(input.status);
-  const rawUrgency = firstValue(input.urgency);
-
-  return {
-    status: isTicketStatus(rawStatus) ? rawStatus : "all",
-    urgency: isTicketUrgency(rawUrgency) ? rawUrgency : "all",
-  };
-}
-
-function isTicketStatus(value: string): value is TicketStatus {
-  return statusValues.includes(value as TicketStatus);
-}
-
-function isTicketUrgency(value: string): value is AdminTicketUrgencyFilter {
-  return urgencyValues.includes(value as "urgent" | "normal");
-}
-
-function firstValue(value?: string | string[]) {
-  if (Array.isArray(value)) {
-    return value[0] ?? "";
-  }
-
-  return value ?? "";
 }
 
 function revalidateAdminTicketPaths(ticketId: string) {
